@@ -1,0 +1,19 @@
+{
+  "name": "nursebot_be",
+  "version": "1.0.3",
+  "description": "A Node JS server to run a covid-related chatbot.",
+  "main": "index.js",
+  "scripts": {
+    "test": "testrun"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjamin787/NurseBot_BE.git"
+  },
+  "author": "Benjamin Rowe",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benjamin787/NurseBot_BE/issues"
+  },
+  "homepage": "https://github.com/benjamin787/NurseBot_BE#readme"
+}
