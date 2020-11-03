@@ -21,5 +21,9 @@ app.post('/chatbot', (request, response, next) => {
     .catch((error) => response.send({ 'ERROR': error}))
 })
 
+app.get('/', (request, response) => {
+    return 'hi'
+})
+
 const PORT = process.env.PORT || 5000
 app.listen(PORT, '0.0.0.0')
