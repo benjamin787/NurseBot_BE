@@ -4,7 +4,8 @@
   "description": "A Node JS server to run a covid-related chatbot.",
   "main": "index.js",
   "scripts": {
-    "test": "testrun"
+    "test": "testrun",
+    "start": "npm start"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/benjamin787/NurseBot_BE/issues"
   },
-  "homepage": "https://github.com/benjamin787/NurseBot_BE#readme"
+  "homepage": "https://github.com/benjamin787/NurseBot_BE#readme",
+  "dependencies": {
+    "actions-on-google": "^2.13.0",
+    "cors": "^2.8.5",
+    "dialogflow": "^1.2.0",
+    "dialogflow-fulfillment": "^0.6.1"
+  }
 }
