@@ -11,19 +11,15 @@ app.use(bodyParser.urlencoded({extended: true}))
 const morgan = require('morgan')
 app.use(morgan('dev'))
 
-const PORT = process.env.DATABASE_URL || 4000
+const PORT = process.env.PORT || 4000
 
 const connectToDF = required('./chatbot.js')
 
 app.post('/chatbot', (request, response, next) => {
     const message = request.body.message
-    
+    connectToDF(message)
+        .then((response) => response.send({ message: response }))
+        .catch((error) => response.send({ 'ERROR': error}))
 })
-
-app.get('/', (req, res) => {
-    return 'hi'
-})
-
-
 
 app.listen(PORT)
