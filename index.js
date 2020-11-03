@@ -21,16 +21,16 @@ app.post('/chatbot', jsonParser, urlEncoded, (request, response, next) => {
         .catch((error) => response.send({ 'ERROR': error}))
 })
 
-app.get('/hi', (request, response) => {
-    return (
-        <div>
-            <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png"/>
-            <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png"/>
-            <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png"/>
-            <link rel="manifest" href="/favicon_io/site.webmanifest"/>
-        </div>
-    )
-})
+// app.get('/hi', (request, response) => {
+//     return (
+//         <div>
+//             <link rel="apple-touch-icon" sizes="180x180" href="/favicon_io/apple-touch-icon.png"/>
+//             <link rel="icon" type="image/png" sizes="32x32" href="/favicon_io/favicon-32x32.png"/>
+//             <link rel="icon" type="image/png" sizes="16x16" href="/favicon_io/favicon-16x16.png"/>
+//             <link rel="manifest" href="/favicon_io/site.webmanifest"/>
+//         </div>
+//     )
+// })
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, '0.0.0.0')
