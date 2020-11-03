@@ -26,11 +26,15 @@ const connectToDF = (message) => {
             }
         }
     }
-    return axios.get(sessionClient)
-        .detectIntent(botRequest)
-        .then((response) => {
-            return response[0].queryResult
-        }).catch((error) => {
-            console.log('ERROR: ' + error)
-        })
+    return (
+        axios.get(sessionClient)
+            .detectIntent(botRequest)
+            .then((response) => {
+                return response[0].queryResult
+            }).catch((error) => {
+                console.log('ERROR: ' + error)
+            })
+    )
 }
+
+module.exports = connectToDF;

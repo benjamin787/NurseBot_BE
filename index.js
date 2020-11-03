@@ -5,8 +5,8 @@ const cors = require('cors')
 app.use(cors())
 
 const bodyParser = require('body-parser')
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: true}))
+let jsonParser = bodyParser.json()
+let urlEncoded = bodyParser.urlencoded({ extended: true })
 
 const morgan = require('morgan')
 app.use(morgan('dev'))
@@ -14,11 +14,11 @@ app.use(morgan('dev'))
 
 const connectToDF = required('./chatbot.js')
 
-app.post('/chatbot', (request, response, next) => {
+app.post('/chatbot', jsonParser, urlEncoded, (request, response, next) => {
     const message = request.body.message
     connectToDF(message)
-    .then((response) => response.send({ message: response }))
-    .catch((error) => response.send({ 'ERROR': error}))
+        .then((response) => response.send({ message: response }))
+        .catch((error) => response.send({ 'ERROR': error}))
 })
 
 app.get('/hi', (request, response) => {
