@@ -11,7 +11,7 @@ const bodyParser = require('body-parser')
 let jsonParser = bodyParser.json()
 let urlEncoded = bodyParser.urlencoded({ extended: true })
 
-const connectToDF = required('./chatbot.js')
+const connectToDF = require('./chatbot.js')
 
 app.post('/chatbot', jsonParser, urlEncoded, (request, response) => {
     const message = request.body.message
