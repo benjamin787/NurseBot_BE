@@ -11,7 +11,7 @@ const config = {
 }
 
 const languageCode = "en-US"
-const session_id = "11235813"
+const session_id = `${Math.floor(Math.random() * 100) + 1}`
 
 const sessionClient = new dialogflow.SessionsClient(config)
 const sessionPath = sessionClient.sessionPath(project_id, session_id)
