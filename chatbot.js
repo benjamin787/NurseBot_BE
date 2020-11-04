@@ -1,14 +1,14 @@
 const dialogflow = require('dialogflow')
 const axios = require('axios')
 
-const { private_key, project_id, client_email } = process.env.GOOGLE_APPLICATION_CREDENTIALS
-
 const config = {
     credentials: {
-        private_key: private_key,
-        client_email: client_email
+        private_key: process.env.PRIVATE_KEY,
+        client_email: process.env.CLIENT_EMAIL
     }
 }
+
+const project_id = process.env.PROJECT_ID
 
 const languageCode = "en-US"
 const session_id = `${Math.floor(Math.random() * 100) + 1}`
