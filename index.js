@@ -35,7 +35,7 @@ const sessionPath = sessionClient.projectAgentSessionPath(project_id, session_id
 
 app.post('/chatbot', (req, res) => {
     res.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
-    const agent = new WebhookClient({req, res})
+    const agent = new WebhookClient({req: req, res: res})
 
     function fx(agent) {
         agent.add('you got this!')
