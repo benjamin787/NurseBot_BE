@@ -16,7 +16,7 @@ const { WebhookClient } = require('dialogflow-fulfillment')
 
 const dialogflow = require('@google-cloud/dialogflow')
 
-const project_id = JSON.parse(process.env.PROJECT_ID)
+const project_id = process.env.PROJECT_ID
 
 const config = {
     credentials: {
