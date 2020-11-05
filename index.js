@@ -14,15 +14,13 @@ const { WebhookClient } = require('dialogflow-fulfillment')
 
 //might have to pass express.json() in
 app.post('/chatbot', (req, res) => {
-    const agent = new WebhookClient({
-        req: req,
-        res: res
-    })
+    const agent = new WebhookClient({req, res})
+
     function test(agent) {
         agent.add('you got this!')
     }
     let intentMap = new Map()
-    intentMap.set('Find Tests', test)
+    intentMap.set('Default Welcome Intent', test)
     agent.handleRequest(intentMap)
 })
 
