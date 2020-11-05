@@ -14,8 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 const connectToDF = require('./chatbot.js')
 
 app.post('/chatbot', (request, response) => {
-    const message = request.body.message
-    connectToDF(message)
+    connectToDF(request)
         .then((response) => response.send({ message: response }))
         .catch((error) => response.send({ 'ERROR': error}))
 })
