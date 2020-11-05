@@ -1,40 +1,38 @@
-const dialogflow = require('dialogflow')
-const axios = require('axios')
+const dialogflow = require('@google-cloud/dialogflow')
+
+const project_id = process.env.PROJECT_ID
 
 const config = {
     credentials: {
         private_key: process.env.PRIVATE_KEY,
         client_email: process.env.CLIENT_EMAIL
-    }
+    },
+    project_id: project_id
 }
 
-const project_id = process.env.PROJECT_ID
-
-const languageCode = "en-US"
-const session_id = `${Math.floor(Math.random() * 100) + 1}`
+const session_id = `${Math.floor(Math.random() * 1000) + 1}`
 
 const sessionClient = new dialogflow.SessionsClient(config)
-const sessionPath = sessionClient.sessionPath(project_id, session_id)
+const sessionPath = sessionClient.projectAgentSessionPath(project_id, session_id)
 
-const connectToDF = (message) => {
-    const botRequest = {
+const configureRequest = (message) => {
+    return ({ 
         session: sessionPath,
-        queryInputs: {
+        queryInput: {
             text: {
                 text: message,
-                languageCode
+                languageCode: "en-US"
             }
-        }
-    }
-    return (
-        axios.get(sessionClient)
-            .detectIntent(botRequest)
-            .then((response) => {
-                return response[0].queryResult
-            }).catch((error) => {
-                console.log('ERROR: ' + error)
-            })
-    )
+    }})
+}
+
+const connectToDF = (message) => {
+    sessionClient.detectIntent(configureRequest(message))
+        .then((response) => {
+            return response[0].queryResult
+        }).catch((error) => {
+            console.log('ERROR: ' + error)
+        })
 }
 
 module.exports = connectToDF;
