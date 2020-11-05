@@ -4,6 +4,8 @@ const app = express()
 const cors = require('cors')
 app.use(cors())
 
+app.options('/chatbot', cors())
+
 const morgan = require('morgan')
 app.use(morgan('dev'))
 
