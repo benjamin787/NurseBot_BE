@@ -35,7 +35,7 @@ const sessionPath = sessionClient.projectAgentSessionPath(project_id, session_id
 
 app.post('/chatbot', (request, response) => {
     console.log('body', request.body)
-    console.log('response', response)
+    console.log('response', response.body)
     request.session = sessionPath
     request.queryInput = {
         text: {
@@ -45,15 +45,21 @@ app.post('/chatbot', (request, response) => {
     }
     response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
     // const agent = new WebhookClient({req: req, res: res})
+    console.log('1')
     const agent = new WebhookClient({request, response})
+    console.log('2')
 
     function fx(agent) {
         agent.add('you got this!')
     }
     let intentMap = new Map()
+    console.log('3')
     intentMap.set('Default Welcome Intent', fx)
+    console.log('4')
     agent.handleRequest(intentMap)
+    console.log('5')
     response.status(200).end()
+    console.log('6')
 })
 
 
