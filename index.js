@@ -56,6 +56,10 @@ async function runSample(projectId) {
   }
 }
 
+app.post('/chatbot', (request, response) => {
+    runSample(projectId)
+})
+
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, '0.0.0.0')
