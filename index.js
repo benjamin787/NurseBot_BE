@@ -12,7 +12,7 @@ app.use(morgan('dev'))
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
-const { WebhookClient } = require('dialogflow-fulfillment')
+const { WebhookClient, QueryInput, QueryParameters } = require('dialogflow-fulfillment')
 
 const dialogflow = require('@google-cloud/dialogflow')
 
