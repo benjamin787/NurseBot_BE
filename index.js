@@ -24,8 +24,7 @@ const options = {
         client_email: process.env.CLIENT_EMAIL
         // private_key: JSON.parse(process.env.PRIVATE_KEY),
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
-    },
-    project_id: projectId
+    }
 }
 
 
