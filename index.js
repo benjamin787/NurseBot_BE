@@ -16,7 +16,6 @@ app.use(bodyParser.json())
 
 app.options('/chatbot', cors())
 
-const projectId = process.env.PROJECT_ID
 
 const options = {
     credentials: {
@@ -28,46 +27,50 @@ const options = {
 }
 
 
-async function runSample(projectId) {
+async function runSample() {
   // A unique identifier for the given session
   const sessionId = uuid.v4();
+  
+  const projectId = process.env.PROJECT_ID
+  
+    const sessionClient = new dialogflow.SessionsClient(options);
+    const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
-
-  const sessionClient = new dialogflow.SessionsClient(options);
-  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
-
-
-  const request = {
-    session: sessionPath,
-    queryInput: {
-      text: {
-        // The query to send to the dialogflow agent
-        text: 'hello',
-        // The language used by the client (en-US)
-        languageCode: 'en-US',
-      },
-    },
-  };
+    const request = {
+        session: sessionPath,
+        queryInput: {
+        text: {
+            // The query to send to the dialogflow agent
+            text: 'hello',
+            // The language used by the client (en-US)
+            languageCode: 'en-US',
+        },
+        },
+    };
 
   // Send request and log result
-  const responses = await sessionClient.detectIntent(request);
+    try {
+        const responses = await sessionClient.detectIntent(request);
+    } catch(error) {
+        console.log('ERROR:', error)
+    }
+    
+    console.log('Detected intent');
+    const result = responses[0].queryResult;
+    
+    console.log(`  Query: ${result.queryText}`);
+    console.log(`  Response: ${result.fulfillmentText}`);
 
-  console.log('Detected intent');
-  const result = responses[0].queryResult;
-
-  console.log(`  Query: ${result.queryText}`);
-  console.log(`  Response: ${result.fulfillmentText}`);
-  
-  if (result.intent) {
-    console.log(`  Intent: ${result.intent.displayName}`);
-  } else {
-    console.log(`  No intent matched.`);
-  }
-  return result
+    if (result.intent) {
+        console.log(`  Intent: ${result.intent.displayName}`);
+    } else {
+        console.log(`  No intent matched.`);
+    }
+    return result
 }
 
 app.post('/chatbot', (request, response) => {
-    runSample(projectId)
+    runSample()
 })
 
 
