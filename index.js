@@ -36,12 +36,17 @@ const options = {
 
 async function runSample() {
   // A unique identifier for the given session
-  const sessionId = uuid.v4();
-  
-  const projectId = process.env.PROJECT_ID
-  
+    const sessionId = uuid.v4();
+
+    const projectId = process.env.PROJECT_ID
+
     const sessionClient = new dialogflow.SessionsClient(options);
     const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+
+
+    console.log('project id', process.env.PROJECT_ID)
+    console.log('email', process.env.CLIENT_EMAIL)
+    console.log('key', process.env.PRIVATE_KEY)
 
     const request = {
         session: sessionPath,
@@ -55,15 +60,18 @@ async function runSample() {
         },
     };
 
+    let responses
   // Send request and log result
     try {
-        const responses = await sessionClient.detectIntent(request);
+        responses = await sessionClient.detectIntent(request);
     } catch(error) {
         console.log('ERROR:', error)
     }
-    
-    console.log('Detected intent');
-    const result = responses[0].queryResult;
+    let result
+    if (responses) {
+        result = responses[0].queryResult;
+        console.log('Detected intent');
+    }
     console.log('result', result)
     
     console.log(`  Query: ${result.queryText}`);
