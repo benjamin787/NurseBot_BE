@@ -35,6 +35,7 @@ const options = {
 // const session_id = `${Math.floor(Math.random() * 1000) + 1}`
 const sessionId = uuid.v4()
 
+let languageCode = 'en-US'
 
 let queries;
 
