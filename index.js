@@ -16,6 +16,7 @@ app.options('/chatbot', cors())
 const { WebhookClient } = require('dialogflow-fulfillment')
 
 app.post('/chatbot', (request, response) => {
+    response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
     dialogflowFulfillment(request, response)
 })
 
