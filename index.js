@@ -32,11 +32,11 @@ async function runSample(projectId) {
   // A unique identifier for the given session
   const sessionId = uuid.v4();
 
-  // Create a new session
+
   const sessionClient = new dialogflow.SessionsClient(options);
   const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
-  // The text query request.
+
   const request = {
     session: sessionPath,
     queryInput: {
@@ -63,6 +63,7 @@ async function runSample(projectId) {
   } else {
     console.log(`  No intent matched.`);
   }
+  return result
 }
 
 app.post('/chatbot', (request, response) => {
