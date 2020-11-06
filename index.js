@@ -18,7 +18,7 @@ const dialogflow = require('@google-cloud/dialogflow')
 
 const project_id = process.env.PROJECT_ID
 
-const config = {
+const options = {
     credentials: {
         private_key: process.env.PRIVATE_KEY,
         client_email: process.env.CLIENT_EMAIL
@@ -30,23 +30,36 @@ const config = {
 
 const session_id = `${Math.floor(Math.random() * 1000) + 1}`
 
-const sessionClient = new dialogflow.SessionsClient(config)
-const sessionPath = sessionClient.projectAgentSessionPath(project_id, session_id)
+const sessionClient = new dialogflow.SessionsClient(options)
+const sessionPath = `projects/${project_id}/agent/sessions/${session_id}`
+
+const configureRequest = (request) => {
+    const botRequest = {
+        session: sessionPath,
+        queryInput: QueryInput.fromObject({
+            text: {
+                text: request.body.message,
+                languageCode: "en-US"
+            }
+        })
+    }
+    if (request.contexts && request.contexts.length > 0) {
+        botRequest.queryParams = QueryParameters.fromObject({
+            contexts: request.contexts
+        })
+    }
+    return botRequest
+}
+
 
 app.post('/chatbot', (request, response) => {
     console.log('body', request.body)
     console.log('response', response.body)
-    request.session = sessionPath
-    request.queryInput = {
-        text: {
-            text: request.body.message,
-            languageCode: "en-US"
-        }
-    }
+
     response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
     // const agent = new WebhookClient({req: req, res: res})
     console.log('1')
-    const agent = new WebhookClient({request, response})
+    const agent = new WebhookClient(configureRequest(request), response)
     console.log('2')
 
     function fx(agent) {
