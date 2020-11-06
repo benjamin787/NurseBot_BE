@@ -36,7 +36,7 @@ const options = {
 const sessionId = uuid.v4()
 
 
-
+let queries;
 
 async function detectIntent(
   projectId,
