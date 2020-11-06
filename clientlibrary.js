@@ -1,7 +1,20 @@
 const dialogflow = require('@google-cloud/dialogflow');
 const uuid = require('uuid');
 
+const express = require('express')
+const app = express()
 
+const cors = require('cors')
+app.use(cors())
+
+
+const morgan = require('morgan')
+app.use(morgan('dev'))
+
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
+
+app.options('/chatbot', cors())
 
 const projectId = process.env.PROJECT_ID
 
@@ -42,3 +55,7 @@ async function runSample(projectId) {
     console.log(`  No intent matched.`);
   }
 }
+
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, '0.0.0.0')
