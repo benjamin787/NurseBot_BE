@@ -12,9 +12,11 @@ app.use(morgan('dev'))
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 
-const { WebhookClient, QueryInput, QueryParameters } = require('dialogflow-fulfillment')
+const { WebhookClient } = require('dialogflow-fulfillment')
 
 const dialogflow = require('@google-cloud/dialogflow')
+
+const uuid = require('uuid')
 
 const project_id = process.env.PROJECT_ID
 
@@ -28,7 +30,8 @@ const options = {
     project_id: project_id
 }
 
-const session_id = `${Math.floor(Math.random() * 1000) + 1}`
+// const session_id = `${Math.floor(Math.random() * 1000) + 1}`
+const session_id = uuid.v4()
 
 const sessionClient = new dialogflow.SessionsClient(options)
 const sessionPath = `projects/${project_id}/agent/sessions/${session_id}`
@@ -36,27 +39,43 @@ const sessionPath = `projects/${project_id}/agent/sessions/${session_id}`
 const configureRequest = (request) => {
     const botRequest = {
         session: sessionPath,
-        queryInput: QueryInput.fromObject({
+        queryInput: {
             text: {
                 text: request.body.message,
                 languageCode: "en-US"
             }
-        })
+        }
     }
     if (request.contexts && request.contexts.length > 0) {
-        botRequest.queryParams = QueryParameters.fromObject({
-            contexts: request.contexts
-        })
+        botRequest.queryParams ={ contexts: request.contexts }
     }
     return botRequest
 }
+// const configureRequest = (request) => {
+//     const botRequest = {
+//         session: sessionPath,
+//         queryInput: QueryInput.fromObject({
+//             text: {
+//                 text: request.body.message,
+//                 languageCode: "en-US"
+//             }
+//         })
+//     }
+//     if (request.contexts && request.contexts.length > 0) {
+//         botRequest.queryParams = QueryParameters.fromObject({
+//             contexts: request.contexts
+//         })
+//     }
+//     return botRequest
+// }
 
 
 app.post('/chatbot', (request, response) => {
-    console.log('body', request.body)
-    console.log('response', response.body)
-
+    console.log('request.body', request.body)
+    console.log('response.body', response.body)
+    
     response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
+    console.log('response', response)
     // const agent = new WebhookClient({req: req, res: res})
     console.log('1')
     const agent = new WebhookClient(configureRequest(request), response)
