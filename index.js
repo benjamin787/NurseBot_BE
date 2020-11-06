@@ -95,6 +95,13 @@ app.post('/chatbot', (request, response) => {
     console.log('6')
 })
 
+// exports.dialogflowFirebaseFulfillment = functions.https.onRequest((request, response) => {
+//     function getAgentNameHandler(agent) {
+//         agent.add('From fulfillment: My name is Dialogflow!')
+//     }
+// })
+
+
 
 // app.post('/chatbot', (request, response) => {
 //     connectToDF(request)
