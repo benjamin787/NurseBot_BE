@@ -33,10 +33,19 @@ const session_id = `${Math.floor(Math.random() * 1000) + 1}`
 const sessionClient = new dialogflow.SessionsClient(config)
 const sessionPath = sessionClient.projectAgentSessionPath(project_id, session_id)
 
-app.post('/chatbot', (req, res) => {
-    res.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
+app.post('/chatbot', (request, response) => {
+    console.log('body', request.body)
+    console.log('response', response)
+    request.session = sessionPath
+    request.queryInput = {
+        text: {
+            text: request.body.message,
+            languageCode: "en-US"
+        }
+    }
+    response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
     // const agent = new WebhookClient({req: req, res: res})
-    const agent = new WebhookClient({req, res})
+    const agent = new WebhookClient({request, response})
 
     function fx(agent) {
         agent.add('you got this!')
@@ -44,7 +53,7 @@ app.post('/chatbot', (req, res) => {
     let intentMap = new Map()
     intentMap.set('Default Welcome Intent', fx)
     agent.handleRequest(intentMap)
-    res.status(200).end()
+    response.status(200).end()
 })
 
 
