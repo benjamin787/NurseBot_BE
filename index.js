@@ -15,7 +15,7 @@ app.use(bodyParser.json())
 const { WebhookClient } = require('dialogflow-fulfillment')
 
 const dialogflow = require('@google-cloud/dialogflow')
-const { QueryParameters, QueryInput } = require('@google-cloud/dialogflow')
+// const { QueryParameters, QueryInput } = require('@google-cloud/dialogflow')
 
 const uuid = require('uuid')
 
@@ -37,38 +37,38 @@ const session_id = uuid.v4()
 const sessionClient = new dialogflow.SessionsClient(options)
 const sessionPath = `projects/${project_id}/agent/sessions/${session_id}`
 
-// const configureRequest = (request) => {
-//     const botRequest = {
-//         session: sessionPath,
-//         queryInput: {
-//             text: {
-//                 text: request.body.message,
-//                 languageCode: "en-US"
-//             }
-//         }
-//     }
-//     if (request.contexts && request.contexts.length > 0) {
-//         botRequest.queryParams ={ contexts: request.contexts }
-//     }
-//     return botRequest
-// }
 const configureRequest = (request) => {
     const botRequest = {
         session: sessionPath,
-        queryInput: QueryInput.fromObject({
+        queryInput: {
             text: {
                 text: request.body.message,
                 languageCode: "en-US"
             }
-        })
+        }
     }
     if (request.contexts && request.contexts.length > 0) {
-        botRequest.queryParams = QueryParameters.fromObject({
-            contexts: request.contexts
-        })
+        botRequest.queryParams ={ contexts: request.contexts }
     }
     return botRequest
 }
+// const configureRequest = (request) => {
+//     const botRequest = {
+//         session: sessionPath,
+//         queryInput: QueryInput.fromObject({
+//             text: {
+//                 text: request.body.message,
+//                 languageCode: "en-US"
+//             }
+//         })
+//     }
+//     if (request.contexts && request.contexts.length > 0) {
+//         botRequest.queryParams = QueryParameters.fromObject({
+//             contexts: request.contexts
+//         })
+//     }
+//     return botRequest
+// }
 
 
 app.post('/chatbot', (request, response) => {
@@ -79,7 +79,7 @@ app.post('/chatbot', (request, response) => {
     // console.log('response', response)
     // const agent = new WebhookClient({req: req, res: res})
     console.log('1')
-    const agent = new WebhookClient(configureRequest(request), response)
+    const agent = new WebhookClient({request: configureRequest(request), response: response})
     console.log('2')
 
     function fx(agent) {
