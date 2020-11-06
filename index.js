@@ -1,44 +1,32 @@
-const dialogflow = require('@google-cloud/dialogflow');
-const uuid = require('uuid');
+const express = require('express')
+const app = express()
+
+const cors = require('cors')
+app.use(cors())
 
 
+const morgan = require('morgan')
+app.use(morgan('dev'))
 
-const projectId = process.env.PROJECT_ID
+const bodyParser = require('body-parser')
+app.use(bodyParser.json())
 
+app.options('/chatbot', cors())
 
-async function runSample(projectId) {
-  // A unique identifier for the given session
-  const sessionId = uuid.v4();
+const { WebhookClient } = require('dialogflow-fulfillment')
 
-  // Create a new session
-  const sessionClient = new dialogflow.SessionsClient();
-  const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+app.post('/chatbot', (request, response) => {
+    dialogflowFulfillment(request, response)
+})
 
-  // The text query request.
-  const request = {
-    session: sessionPath,
-    queryInput: {
-      text: {
-        // The query to send to the dialogflow agent
-        text: 'hello',
-        // The language used by the client (en-US)
-        languageCode: 'en-US',
-      },
-    },
-  };
+const dialogflowFulfillment = (request, response) => {
+    const agent = new WebhookClient({request, response})
 
-  // Send request and log result
-  const responses = await sessionClient.detectIntent(request);
+    function sayHello(agent) {
+        agent.add('yay')
+    }
 
-  console.log('Detected intent');
-  const result = responses[0].queryResult;
-
-  console.log(`  Query: ${result.queryText}`);
-  console.log(`  Response: ${result.fulfillmentText}`);
-  
-  if (result.intent) {
-    console.log(`  Intent: ${result.intent.displayName}`);
-  } else {
-    console.log(`  No intent matched.`);
-  }
+    let intentMap = new Map()
+    intentMap.set('Default Welcome Intent', sayHello)
+    agent.handleRequest(intentMap)
 }
