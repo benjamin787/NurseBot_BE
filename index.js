@@ -18,13 +18,23 @@ app.options('/chatbot', cors())
 
 const projectId = process.env.PROJECT_ID
 
+const options = {
+    credentials: {
+        private_key: process.env.PRIVATE_KEY,
+        client_email: process.env.CLIENT_EMAIL
+        // private_key: JSON.parse(process.env.PRIVATE_KEY),
+        // client_email: JSON.parse(process.env.CLIENT_EMAIL)
+    },
+    project_id: projectId
+}
+
 
 async function runSample(projectId) {
   // A unique identifier for the given session
   const sessionId = uuid.v4();
 
   // Create a new session
-  const sessionClient = new dialogflow.SessionsClient();
+  const sessionClient = new dialogflow.SessionsClient(options);
   const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
 
   // The text query request.
