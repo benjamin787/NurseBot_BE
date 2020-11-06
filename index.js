@@ -4,8 +4,13 @@ const uuid = require('uuid');
 const express = require('express')
 const app = express()
 
+const corsOptions = {
+    origin: '*',
+    methods: "GET,HEAD,PUT,POST,PATCH,DELETE"
+}
+
 const cors = require('cors')
-app.use(cors())
+app.use(cors(corsOptions))
 
 
 const morgan = require('morgan')
@@ -25,6 +30,8 @@ const options = {
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
     }
 }
+
+// response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
 
 async function runSample() {
@@ -57,6 +64,7 @@ async function runSample() {
     
     console.log('Detected intent');
     const result = responses[0].queryResult;
+    console.log('result', result)
     
     console.log(`  Query: ${result.queryText}`);
     console.log(`  Response: ${result.fulfillmentText}`);
