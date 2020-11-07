@@ -42,7 +42,7 @@ const conversationTurn = (sessionId, data) => {
 
     const dialogClient = new dialogflow.SessionsClient(options);
 
-    console.log('sessionclient', sessionClient)
+    console.log('dialogClient', dialogClient)
 
     const sessionPath = dialogClient.sessionPath(projectId, sessionId);
 
