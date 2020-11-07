@@ -35,47 +35,41 @@ const options = {
 
 const sessionId = uuid.v4();
 
+
+
 const conversationTurn = (sessionId, data) => {
-
-
+    
     const projectId = process.env.PROJECT_ID
 
+    console.log('projectId', projectId)
+    console.log('sessionId', sessionId)
+    
     const dialogClient = new dialogflow.SessionsClient(options);
-
-    console.log('dialogClient', dialogClient)
 
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
 
-    console.log('project id', process.env.PROJECT_ID)
-    console.log('email', process.env.CLIENT_EMAIL)
-    console.log('key', process.env.PRIVATE_KEY)
-
     const request = {
         session: sessionPath,
         queryInput: {
-        text: {
-            // The query to send to the dialogflow agent
-            text: data,
-            // The language used by the client (en-US)
-            languageCode: 'en-US',
-        },
+            text: {
+                text: data,
+                languageCode: 'en-US',
+            },
         },
     };
-
-    // let responses
 
     const botResponse = dialogClient.detectIntent(request)
         .then(response => response[0].queryResult)
         .catch(error => {
             console.log('ERROR', error)
         })
-  // Send request and log result
-
+        
     console.log('botResponse', botResponse)
-
+    
     return botResponse
-
+        
+        // Send request and log result
     // try {
     //     responses = await sessionClient.detectIntent(request);
     // } catch(error) {
@@ -98,7 +92,7 @@ const conversationTurn = (sessionId, data) => {
 }
 
 app.post('/chatbot', (request, response) => {
-    conversationTurn()
+    conversationTurn(sessionId, request)
 })
 
 
