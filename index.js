@@ -44,7 +44,7 @@ const conversationTurn = (sessionId, data) => {
 
     console.log('dialogClient', dialogClient)
 
-    const sessionPath = dialogClient.sessionPath(projectId, sessionId);
+    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
 
     console.log('project id', process.env.PROJECT_ID)
