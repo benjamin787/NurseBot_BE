@@ -41,7 +41,7 @@ const conversationTurn = (sessionId, data) => {
     const projectId = process.env.PROJECT_ID
 
     const sessionClient = new dialogflow.SessionsClient(options);
-    const sessionPath = sessionClient.projectAgentSessionPath(projectId, sessionId);
+    const sessionPath = sessionClient.sessionPath(projectId, sessionId);
 
 
     console.log('project id', process.env.PROJECT_ID)
