@@ -6,7 +6,7 @@ const app = express()
 
 const corsOptions = {
     origin: '*',
-    methods: "GET,HEAD,PUT,POST,PATCH,DELETE"
+    methods: 'GET,HEAD,PUT,POST,PATCH,DELETE'
 }
 
 const cors = require('cors')
@@ -33,10 +33,10 @@ const options = {
 
 // response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
+const sessionId = uuid.v4();
 
-async function runSample() {
-  // A unique identifier for the given session
-    const sessionId = uuid.v4();
+const conversationTurn = (sessionId, data) => {
+
 
     const projectId = process.env.PROJECT_ID
 
@@ -53,40 +53,49 @@ async function runSample() {
         queryInput: {
         text: {
             // The query to send to the dialogflow agent
-            text: 'hello',
+            text: data,
             // The language used by the client (en-US)
             languageCode: 'en-US',
         },
         },
     };
 
-    let responses
-  // Send request and log result
-    try {
-        responses = await sessionClient.detectIntent(request);
-    } catch(error) {
-        console.log('ERROR:', error)
-    }
-    let result
-    if (responses) {
-        result = responses[0].queryResult;
-        console.log('Detected intent');
-    }
-    console.log('result', result)
-    
-    console.log(`  Query: ${result.queryText}`);
-    console.log(`  Response: ${result.fulfillmentText}`);
+    // let responses
 
-    if (result.intent) {
-        console.log(`  Intent: ${result.intent.displayName}`);
-    } else {
-        console.log(`  No intent matched.`);
-    }
-    return result
+    const botResponse = sessionClient.detectIntent(request)
+        .then(response => response[0].queryResult)
+        .catch(error => {
+            console.log('ERROR', error)
+        })
+  // Send request and log result
+
+    console.log('botResponse', botResponse)
+
+    return botResponse
+
+    // try {
+    //     responses = await sessionClient.detectIntent(request);
+    // } catch(error) {
+    //     console.log('ERROR:', error)
+    // }
+    // let result
+    // if (responses) {
+    //     result = responses[0].queryResult;
+    //     console.log('Detected intent');
+    // }
+    // console.log('result', result)
+    
+
+    // if (result.intent) {
+    //     console.log(`  Intent: ${result.intent.displayName}`);
+    // } else {
+    //     console.log(`  No intent matched.`);
+    // }
+    // return result
 }
 
 app.post('/chatbot', (request, response) => {
-    runSample()
+    conversationTurn()
 })
 
 
