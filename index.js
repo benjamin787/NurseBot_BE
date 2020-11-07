@@ -1,4 +1,4 @@
-const dialogflow = require('@google-cloud/dialogflow');
+const dialogflow = require('dialogflow');
 const uuid = require('uuid');
 
 const express = require('express')
@@ -24,8 +24,8 @@ app.options('/chatbot', cors())
 
 const options = {
     credentials: {
-        private_key: process.env.PRIVATE_KEY,
-        client_email: process.env.CLIENT_EMAIL
+        'private_key': process.env.PRIVATE_KEY,
+        'client_email': process.env.CLIENT_EMAIL
         // private_key: JSON.parse(process.env.PRIVATE_KEY),
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
     }
@@ -40,8 +40,11 @@ const conversationTurn = (sessionId, data) => {
 
     const projectId = process.env.PROJECT_ID
 
-    const sessionClient = new dialogflow.SessionsClient(options);
-    const sessionPath = sessionClient.sessionPath(projectId, sessionId);
+    const dialogClient = new dialogflow.SessionsClient(options);
+
+    console.log('sessionclient', sessionClient)
+
+    const sessionPath = dialogClient.sessionPath(projectId, sessionId);
 
 
     console.log('project id', process.env.PROJECT_ID)
@@ -62,7 +65,7 @@ const conversationTurn = (sessionId, data) => {
 
     // let responses
 
-    const botResponse = sessionClient.detectIntent(request)
+    const botResponse = dialogClient.detectIntent(request)
         .then(response => response[0].queryResult)
         .catch(error => {
             console.log('ERROR', error)
