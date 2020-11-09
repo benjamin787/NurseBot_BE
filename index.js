@@ -39,7 +39,7 @@ const projectId = process.env.PROJECT_ID
 
 
 app.post('/chatbot', async (request, response) => {
-    let parsedRequest = JSON.parse(request)
+    let parsedRequest = JSON.parse(request.body)
 
     const dialogClient = new dialogflow.SessionsClient(options);
 
