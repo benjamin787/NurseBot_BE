@@ -64,8 +64,9 @@ app.post('/chatbot', async (request, response) => {
             } else {
                 console.log('no intent')
             }
+            response.send(result)
+            // response.send({ do: "text query" })
         }).catch(error => console.log(error))
-    response.send({ do: "text query" })
 })
 // app.post('/chatbot', (request, response) => {
 //     console.log('projectId', projectId)
