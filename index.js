@@ -62,7 +62,7 @@ const conversationTurn = (data) => {
     
 
     // const botResponse = dialogClient.detectIntent(request)
-    dialogClient.detectIntent(request)
+    return dialogClient.detectIntent(request)
         .then(response => response.json())
         // .then(response => {
         //     console.log('response in DI', response[0].queryResult)
@@ -100,9 +100,31 @@ const conversationTurn = (data) => {
 }
 
 app.post('/chatbot', (request, response) => {
-    conversationTurn(request)
-        .then(response => console.log('response in post', response))
+    console.log('projectId', projectId)
+    console.log('sessionId', sessionId)
+    
+    const dialogClient = new dialogflow.SessionsClient(options);
+
+    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+
+
+    const request = {
+        session: sessionPath,
+        queryInput: {
+            text: {
+                text: data,
+                languageCode: 'en-US',
+            },
+        },
+    };
+
+    dialogClient.detectIntent(request)
+        .then(response => console.log('response', response))
         .catch(error => console.log('ERROR', error))
+
+    // conversationTurn(request)
+    //     .then(response => console.log('response in post', response))
+    //     .catch(error => console.log('ERROR', error))
 })
 
 
