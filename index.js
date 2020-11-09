@@ -62,9 +62,9 @@ const conversationTurn = (data) => {
     
 
     // const botResponse = dialogClient.detectIntent(request)
-    let botResponse = dialogClient.detectIntent(request)
+    dialogClient.detectIntent(request)
         .then(response => {
-            console.log(response[0].queryResult)
+            console.log('response in DI', response[0].queryResult)
             return response[0].queryResult
         })
         // .then(response => response[0].queryResult)
@@ -74,7 +74,7 @@ const conversationTurn = (data) => {
         
     console.log('botResponse', botResponse)
     
-    return botResponse
+    // return botResponse
         
         // Send request and log result
     // try {
@@ -100,7 +100,7 @@ const conversationTurn = (data) => {
 
 app.post('/chatbot', (request, response) => {
     conversationTurn(request)
-        .then(response => console.log(response))
+        .then(response => console.log('response in post', response))
         .catch(error => console.log('ERROR', error))
 })
 
