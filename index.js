@@ -102,37 +102,55 @@ const projectId = process.env.PROJECT_ID
 app.post('/chatbot', (request, response) => {
     console.log('projectId', projectId)
     console.log('sessionId', sessionId)
-    
-    const dialogClient = new dialogflow.SessionsClient(options);
+    conversationTurn(sessionId, request)
+    // const dialogClient = new dialogflow.SessionsClient(options);
 
-    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+    // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
 
-    const data = {
-        session: sessionPath,
-        queryInput: {
-            text: {
-                text: request.body.message,
-                languageCode: 'en-US',
-            },
-        },
-    };
+    // const data = {
+    //     session: sessionPath,
+    //     queryInput: {
+    //         text: {
+    //             text: request.body.message,
+    //             languageCode: 'en-US',
+    //         },
+    //     },
+    // };
 
     // let returnMessage
 
-    dialogClient.detectIntent(data, response)
-        .then((results) => {
-            response.json(results)
-            console.log('response', response)
-            console.log('results', results)
-        })
+    // dialogClient.detectIntent(data, response)
+    //     .then((results) => {
+    //         response.json(results)
+    //         console.log('response', response)
+    //         console.log('results', results)
+    //     })
 
-        .catch(error => console.log('ERROR', error))
+    //     .catch(error => console.log('ERROR', error))
         
     // conversationTurn(request)
     //     .then(response => console.log('response in post', response))
     //     .catch(error => console.log('ERROR', error))
 })
+
+const conversationTurn = async (sessionId, data) => {
+    const dialogClient = new dialogflow.SessionsClient(options);
+
+    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+
+    const botRequest = {
+        session: sessionPath,
+        queryInput: {
+            text: {
+                text: data,
+                languageCode: "en-US"
+            }
+        }
+    }
+    const answer = await dialogClient.detectIntent(botRequest)
+    return answer
+}
 
 
 const PORT = process.env.PORT || 5000
