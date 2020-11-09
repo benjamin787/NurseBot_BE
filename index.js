@@ -140,7 +140,7 @@ const conversationTurn = async (sessionId, data) => {
 
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
-
+    console.log('data body', data.body)
     const botRequest = {
         session: sessionPath,
         queryInput: {
@@ -154,13 +154,13 @@ const conversationTurn = async (sessionId, data) => {
                                         // "queryInput": {
     let answer
     try {
-        answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
-        // answer = await dialogClient.detectIntent(botRequest)
+        // answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
+        answer = await dialogClient.detectIntent(botRequest)
         console.log('answer', answer)
+        return answer[0].queryResult
     } catch(error) {
         console.log('ERROR', error)
     }
-    return answer[0].queryResult
 }
 
 
