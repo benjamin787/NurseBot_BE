@@ -39,7 +39,6 @@ const projectId = process.env.PROJECT_ID
 
 
 app.post('/chatbot', async (request, response) => {
-    let parsedRequest = JSON.parse(request.body)
 
     const dialogClient = new dialogflow.SessionsClient(options);
 
@@ -50,24 +49,19 @@ app.post('/chatbot', async (request, response) => {
         session: sessionPath,
         queryInput: {
             text: {
-                text: parsedRequest.body.body.message,
+                text: request.body.body.message,
                 languageCode: "en-US"
             }
         }
     }
 
-    let botResult = await dialogClient.detectIntent(botRequest)
-        .then(botResult => {
-            console.log('botresult', botResult)
-            const result = botResult.queryResult
-            if (result.intent) {
-                console.log('intent', result.intent)
-            } else {
-                console.log('no intent')
-            }
-            response.send(result)
-            // response.send({ do: "text query" })
-        }).catch(error => console.log(error))
+    try {
+        let botResult = await dialogClient.detectIntent(botRequest)
+        console.log('botresult',botResult)
+    } catch(error) {
+        console.log(error)
+    }
+
 })
 // app.post('/chatbot', (request, response) => {
 //     console.log('projectId', projectId)
