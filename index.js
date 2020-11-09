@@ -72,7 +72,7 @@ const conversationTurn = (data) => {
             console.log('ERROR', error)
         })
         
-    console.log('botResponse', botResponse)
+    // console.log('botResponse', botResponse)
     
     // return botResponse
         
