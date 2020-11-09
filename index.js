@@ -137,8 +137,8 @@ app.post('/chatbot', (request, response) => {
 const conversationTurn = async (sessionId, data) => {
     const dialogClient = new dialogflow.SessionsClient(options);
 
-    // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
-    const sessionPath = dialogClient.sessionPath(projectId, sessionId);
+    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+    // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
 
     const botRequest = {
         session: sessionPath,
