@@ -143,7 +143,7 @@ const conversationTurn = async (sessionId, data) => {
 
     const botRequest = {
         session: sessionPath,
-        query_input: {
+        input: {
             text: {
                 text: data,
                 languageCode: "en-US"
