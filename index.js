@@ -150,7 +150,7 @@ const conversationTurn = async (sessionId, data) => {
             }
         }
     }
-}
+
                                         // "queryInput": {
     let answer
     try {
