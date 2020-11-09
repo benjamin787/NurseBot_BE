@@ -38,66 +38,66 @@ const projectId = process.env.PROJECT_ID
 
 
 
-const conversationTurn = (data) => {
+// const conversationTurn = (data) => {
     
 
-    console.log('projectId', projectId)
-    console.log('sessionId', sessionId)
+//     console.log('projectId', projectId)
+//     console.log('sessionId', sessionId)
     
-    const dialogClient = new dialogflow.SessionsClient(options);
+//     const dialogClient = new dialogflow.SessionsClient(options);
 
-    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+//     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
 
-    const request = {
-        session: sessionPath,
-        queryInput: {
-            text: {
-                text: data,
-                languageCode: 'en-US',
-            },
-        },
-    };
+//     const request = {
+//         session: sessionPath,
+//         queryInput: {
+//             text: {
+//                 text: data,
+//                 languageCode: 'en-US',
+//             },
+//         },
+//     };
 
     
 
-    // const botResponse = dialogClient.detectIntent(request)
-    return dialogClient.detectIntent(request)
-        .then(response => response.json())
-        // .then(response => {
-        //     console.log('response in DI', response[0].queryResult)
-        //     return response[0].queryResult
-        // })
-        // .then(response => response[0].queryResult)
-        .catch(error => {
-            console.log('ERROR', error)
-        })
+//     // const botResponse = dialogClient.detectIntent(request)
+//     return dialogClient.detectIntent(request)
+//         .then(response => response.json())
+//         // .then(response => {
+//         //     console.log('response in DI', response[0].queryResult)
+//         //     return response[0].queryResult
+//         // })
+//         // .then(response => response[0].queryResult)
+//         .catch(error => {
+//             console.log('ERROR', error)
+//         })
         
-    // console.log('botResponse', botResponse)
+//     // console.log('botResponse', botResponse)
     
-    // return botResponse
+//     // return botResponse
         
-        // Send request and log result
-    // try {
-    //     responses = await sessionClient.detectIntent(request);
-    // } catch(error) {
-    //     console.log('ERROR:', error)
-    // }
-    // let result
-    // if (responses) {
-    //     result = responses[0].queryResult;
-    //     console.log('Detected intent');
-    // }
-    // console.log('result', result)
+//         // Send request and log result
+//     // try {
+//     //     responses = await sessionClient.detectIntent(request);
+//     // } catch(error) {
+//     //     console.log('ERROR:', error)
+//     // }
+//     // let result
+//     // if (responses) {
+//     //     result = responses[0].queryResult;
+//     //     console.log('Detected intent');
+//     // }
+//     // console.log('result', result)
     
 
-    // if (result.intent) {
-    //     console.log(`  Intent: ${result.intent.displayName}`);
-    // } else {
-    //     console.log(`  No intent matched.`);
-    // }
-    // return result
-}
+//     // if (result.intent) {
+//     //     console.log(`  Intent: ${result.intent.displayName}`);
+//     // } else {
+//     //     console.log(`  No intent matched.`);
+//     // }
+//     // return result
+// }
 
 app.post('/chatbot', (request, response) => {
     console.log('projectId', projectId)
@@ -108,17 +108,17 @@ app.post('/chatbot', (request, response) => {
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
 
-    const request = {
+    const data = {
         session: sessionPath,
         queryInput: {
             text: {
-                text: data,
+                text: request.body.message,
                 languageCode: 'en-US',
             },
         },
     };
 
-    dialogClient.detectIntent(request)
+    dialogClient.detectIntent(data)
         .then(response => console.log('response', response))
         .catch(error => console.log('ERROR', error))
 
