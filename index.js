@@ -44,11 +44,12 @@ app.post('/chatbot', async (request, response) => {
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
     console.log('req body', request.body)
+    console.log('req', request)
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
-                text: request.body.message,
+                text: request.body.body.message,
                 languageCode: "en-US"
             }
         }
