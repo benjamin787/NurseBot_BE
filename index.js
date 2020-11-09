@@ -102,7 +102,7 @@ const projectId = process.env.PROJECT_ID
 app.post('/chatbot', (request, response) => {
     console.log('projectId', projectId)
     console.log('sessionId', sessionId)
-    response.send(conversationTurn(sessionId, request))
+    response.json(conversationTurn(sessionId, request))
 })
     // const dialogClient = new dialogflow.SessionsClient(options);
 
@@ -156,11 +156,11 @@ const conversationTurn = async (sessionId, data) => {
     try {
         answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
         // answer = await dialogClient.detectIntent(botRequest)
-        console.log('response id', answer.response_id)
+        console.log('answer', answer)
     } catch(error) {
         console.log('ERROR', error)
     }
-    return answer
+    return answer[0].queryResult
 }
 
 
