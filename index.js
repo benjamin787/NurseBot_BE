@@ -25,7 +25,7 @@ const sessionId = uuid.v4();
 
 const options = {
     credentials: {
-        "private_key": process.env.PRIVATE_KEY,
+        "private_key": JSON.parse(process.env.PRIVATE_KEY),
         "client_email": process.env.CLIENT_EMAIL
         // private_key: JSON.parse(process.env.PRIVATE_KEY),
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
@@ -103,6 +103,7 @@ app.post('/chatbot', (request, response) => {
     console.log('projectId', projectId)
     console.log('sessionId', sessionId)
     response.send(conversationTurn(sessionId, request))
+})
     // const dialogClient = new dialogflow.SessionsClient(options);
 
     // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
@@ -132,7 +133,7 @@ app.post('/chatbot', (request, response) => {
     // conversationTurn(request)
     //     .then(response => console.log('response in post', response))
     //     .catch(error => console.log('ERROR', error))
-})
+
 
 const conversationTurn = async (sessionId, data) => {
     const dialogClient = new dialogflow.SessionsClient(options);
