@@ -35,10 +35,10 @@ const options = {
 
 const projectId = process.env.PROJECT_ID
 
-// response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
 
 app.post('/chatbot', async (request, response) => {
+    response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
     const dialogClient = new dialogflow.SessionsClient(options);
 
@@ -58,6 +58,7 @@ app.post('/chatbot', async (request, response) => {
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
         console.log('botresult',botResult)
+        response.send(botResult[0])
     } catch(error) {
         console.log(error)
     }
