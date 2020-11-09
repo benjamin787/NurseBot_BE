@@ -1,5 +1,4 @@
 const dialogflow = require('@google-cloud/dialogflow');
-const uuid = require('uuid');
 
 const express = require('express')
 const app = express()
@@ -21,6 +20,8 @@ app.use(bodyParser.json())
 
 app.options('/chatbot', cors())
 
+const uuid = require('uuid');
+const sessionId = uuid.v4();
 
 const options = {
     credentials: {
@@ -30,11 +31,10 @@ const options = {
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
     }
 }
+
 const projectId = process.env.PROJECT_ID
 
 // response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
-
-const sessionId = uuid.v4();
 
 
 
@@ -59,7 +59,10 @@ const conversationTurn = (data) => {
         },
     };
 
-    const botResponse = dialogClient.detectIntent(request)
+    
+
+    // const botResponse = dialogClient.detectIntent(request)
+    let botResponse = dialogClient.detectIntent(request)
         .then(response => {
             console.log(response[0].queryResult)
             return response[0].queryResult
@@ -97,6 +100,8 @@ const conversationTurn = (data) => {
 
 app.post('/chatbot', (request, response) => {
     conversationTurn(request)
+        .then(response => console.log(response))
+        .catch(error => console.log('ERROR', error))
 })
 
 
