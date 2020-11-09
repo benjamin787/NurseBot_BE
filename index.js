@@ -144,14 +144,14 @@ const conversationTurn = async (sessionId, data) => {
     const botRequest = {
         session: sessionPath,
         body: {
-            "queryInput": {
-                "text": {
-                    "text": data,
-                    "languageCode": "en-US"
-                }
+            "text": {
+                "text": data,
+                "languageCode": "en-US"
             }
         }
     }
+}
+                                        // "queryInput": {
     let answer
     try {
         // answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
