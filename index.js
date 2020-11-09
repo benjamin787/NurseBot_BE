@@ -102,7 +102,7 @@ const projectId = process.env.PROJECT_ID
 app.post('/chatbot', (request, response) => {
     console.log('projectId', projectId)
     console.log('sessionId', sessionId)
-    conversationTurn(sessionId, request)
+    response.send(conversationTurn(sessionId, request))
     // const dialogClient = new dialogflow.SessionsClient(options);
 
     // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
@@ -137,7 +137,8 @@ app.post('/chatbot', (request, response) => {
 const conversationTurn = async (sessionId, data) => {
     const dialogClient = new dialogflow.SessionsClient(options);
 
-    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+    // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+    const sessionPath = dialogClient.sessionPath(projectId, sessionId);
 
     const botRequest = {
         session: sessionPath,
