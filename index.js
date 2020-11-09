@@ -152,7 +152,7 @@ const conversationTurn = async (sessionId, data) => {
     }
     let answer
     try {
-        answer = await dialogClient.detectIntent(botRequest)
+        answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
         console.log('response id', answer.response_id)
     } catch(error) {
         console.log('ERROR', error)
