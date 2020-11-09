@@ -63,10 +63,11 @@ const conversationTurn = (data) => {
 
     // const botResponse = dialogClient.detectIntent(request)
     dialogClient.detectIntent(request)
-        .then(response => {
-            console.log('response in DI', response[0].queryResult)
-            return response[0].queryResult
-        })
+        .then(response => response.json())
+        // .then(response => {
+        //     console.log('response in DI', response[0].queryResult)
+        //     return response[0].queryResult
+        // })
         // .then(response => response[0].queryResult)
         .catch(error => {
             console.log('ERROR', error)
