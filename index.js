@@ -148,7 +148,13 @@ const conversationTurn = async (sessionId, data) => {
             }
         }
     }
-    const answer = await dialogClient.detectIntent(botRequest)
+    let answer
+    try {
+        answer = await dialogClient.detectIntent(botRequest)
+        console.log('answer', answer)
+    } catch(error) {
+        console.log('ERROR', error)
+    }
     return answer
 }
 
