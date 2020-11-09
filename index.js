@@ -49,7 +49,7 @@ app.post('/chatbot', async (request, response) => {
         session: sessionPath,
         queryInput: {
             text: {
-                text: request.body.body.message,
+                text: request.body.body,
                 languageCode: "en-US"
             }
         }
