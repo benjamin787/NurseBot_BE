@@ -141,7 +141,7 @@ const conversationTurn = async (sessionId, data) => {
 
     const botRequest = {
         session: sessionPath,
-        queryInput: {
+        query_input: {
             text: {
                 text: data,
                 languageCode: "en-US"
@@ -151,7 +151,7 @@ const conversationTurn = async (sessionId, data) => {
     let answer
     try {
         answer = await dialogClient.detectIntent(botRequest)
-        console.log('answer', answer)
+        console.log('response id', answer.response_id)
     } catch(error) {
         console.log('ERROR', error)
     }
