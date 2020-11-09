@@ -142,11 +142,11 @@ const conversationTurn = async (sessionId, data) => {
     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
 
     const botRequest = {
-        session: sessionPath,
-        query_input: {
-            text: {
-                text: data,
-                languageCode: "en-US"
+        "session": sessionPath,
+        "query_input": {
+            "text": {
+                "text": data,
+                "languageCode": "en-US"
             }
         }
     }
