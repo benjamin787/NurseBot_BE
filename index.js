@@ -21,6 +21,7 @@ app.use(bodyParser.json())
 app.options('/chatbot', cors())
 
 const uuid = require('uuid');
+const { response } = require('express');
 const sessionId = uuid.v4();
 
 const options = {
@@ -37,131 +38,70 @@ const projectId = process.env.PROJECT_ID
 // response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
 
-
-// const conversationTurn = (data) => {
-    
-
-//     console.log('projectId', projectId)
-//     console.log('sessionId', sessionId)
-    
-//     const dialogClient = new dialogflow.SessionsClient(options);
-
-//     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
-
-
-//     const request = {
-//         session: sessionPath,
-//         queryInput: {
-//             text: {
-//                 text: data,
-//                 languageCode: 'en-US',
-//             },
-//         },
-//     };
-
-    
-
-//     // const botResponse = dialogClient.detectIntent(request)
-//     return dialogClient.detectIntent(request)
-//         .then(response => response.json())
-//         // .then(response => {
-//         //     console.log('response in DI', response[0].queryResult)
-//         //     return response[0].queryResult
-//         // })
-//         // .then(response => response[0].queryResult)
-//         .catch(error => {
-//             console.log('ERROR', error)
-//         })
-        
-//     // console.log('botResponse', botResponse)
-    
-//     // return botResponse
-        
-//         // Send request and log result
-//     // try {
-//     //     responses = await sessionClient.detectIntent(request);
-//     // } catch(error) {
-//     //     console.log('ERROR:', error)
-//     // }
-//     // let result
-//     // if (responses) {
-//     //     result = responses[0].queryResult;
-//     //     console.log('Detected intent');
-//     // }
-//     // console.log('result', result)
-    
-
-//     // if (result.intent) {
-//     //     console.log(`  Intent: ${result.intent.displayName}`);
-//     // } else {
-//     //     console.log(`  No intent matched.`);
-//     // }
-//     // return result
-// }
-
-app.post('/chatbot', (request, response) => {
-    console.log('projectId', projectId)
-    console.log('sessionId', sessionId)
-    response.json(conversationTurn(sessionId, request))
-})
-    // const dialogClient = new dialogflow.SessionsClient(options);
-
-    // const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
-
-
-    // const data = {
-    //     session: sessionPath,
-    //     queryInput: {
-    //         text: {
-    //             text: request.body.message,
-    //             languageCode: 'en-US',
-    //         },
-    //     },
-    // };
-
-    // let returnMessage
-
-    // dialogClient.detectIntent(data, response)
-    //     .then((results) => {
-    //         response.json(results)
-    //         console.log('response', response)
-    //         console.log('results', results)
-    //     })
-
-    //     .catch(error => console.log('ERROR', error))
-        
-    // conversationTurn(request)
-    //     .then(response => console.log('response in post', response))
-    //     .catch(error => console.log('ERROR', error))
-
-
-const conversationTurn = async (sessionId, data) => {
+app.post('/chatbot', async (request, response) => {
     const dialogClient = new dialogflow.SessionsClient(options);
 
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
-    console.log('data body', data.body)
+    console.log('req body', request.body)
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
-                text: data.body.message,
+                text: request.body.message,
                 languageCode: "en-US"
             }
         }
     }
 
-                                        // "queryInput": {
-    let answer
-    try {
-        // answer = await dialogClient.detectIntent(JSON.stringify(botRequest))
-        answer = await dialogClient.detectIntent(botRequest)
-        console.log('answer', answer)
-        return answer[0].queryResult
-    } catch(error) {
-        console.log('ERROR', error)
-    }
-}
+    let botResult = await dialogClient.detectIntent(botRequest)
+        .then((botResult) => {
+            console.log('botresult', botResult)
+            const result = botResult[0].queryResult
+            if (result.intent) {
+                console.log('intent', result.intent)
+            } else {
+                console.log('no intent')
+            }
+        }).catch(error => console.log(error))
+    response.send({ do: "text query" })
+})
+// app.post('/chatbot', (request, response) => {
+//     console.log('projectId', projectId)
+//     console.log('sessionId', sessionId)
+//     response.json(conversationTurn(sessionId, request))
+// })
+
+
+// const conversationTurn = async (sessionId, data) => {
+//     const dialogClient = new dialogflow.SessionsClient(options);
+
+//     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+//     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
+//     console.log('data body', data.body)
+//     const botRequest = {
+//         session: sessionPath,
+//         queryInput: {
+//             text: {
+//                 text: data.body.message,
+//                 languageCode: "en-US"
+//             }
+//         }
+//     }
+
+//     let botResult = await dialogClient.detectIntent(botRequest)
+//         .then((botResult) => {
+//             console.log('botresult', botResult)
+//             const result = botResult[0].queryResult
+//             if (result.intent) {
+//                 console.log('intent', result.intent)
+//             } else {
+//                 console.log('no intent')
+//             }
+//         }).catch(error => console.log(error))
+//     response.send({ do: "text query" })
+    
+// }
 
 
 const PORT = process.env.PORT || 5000
