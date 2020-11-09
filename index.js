@@ -118,8 +118,14 @@ app.post('/chatbot', (request, response) => {
         },
     };
 
+    let returnMessage
+
     dialogClient.detectIntent(data)
-        .then(response => console.log('response', response))
+        .then(response => {
+
+        console.log('response', response)
+        returnMessage = response
+        })
         .catch(error => console.log('ERROR', error))
 
     // conversationTurn(request)
