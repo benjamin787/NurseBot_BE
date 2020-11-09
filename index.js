@@ -30,6 +30,7 @@ const options = {
         // client_email: JSON.parse(process.env.CLIENT_EMAIL)
     }
 }
+const projectId = process.env.PROJECT_ID
 
 // response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
 
@@ -37,9 +38,8 @@ const sessionId = uuid.v4();
 
 
 
-const conversationTurn = (sessionId, data) => {
+const conversationTurn = (data) => {
     
-    const projectId = process.env.PROJECT_ID
 
     console.log('projectId', projectId)
     console.log('sessionId', sessionId)
@@ -60,7 +60,11 @@ const conversationTurn = (sessionId, data) => {
     };
 
     const botResponse = dialogClient.detectIntent(request)
-        .then(response => response[0].queryResult)
+        .then(response => {
+            console.log(response[0].queryResult)
+            return response[0].queryResult
+        })
+        // .then(response => response[0].queryResult)
         .catch(error => {
             console.log('ERROR', error)
         })
@@ -92,7 +96,7 @@ const conversationTurn = (sessionId, data) => {
 }
 
 app.post('/chatbot', (request, response) => {
-    conversationTurn(sessionId, request)
+    conversationTurn(request)
 })
 
 
