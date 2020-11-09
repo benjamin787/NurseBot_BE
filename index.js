@@ -44,7 +44,6 @@ app.post('/chatbot', async (request, response) => {
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
     // const sessionPath = dialogClient.sessionPath(projectId, sessionId);
     console.log('req body', request.body)
-    console.log('req', request)
     const botRequest = {
         session: sessionPath,
         queryInput: {
@@ -56,7 +55,7 @@ app.post('/chatbot', async (request, response) => {
     }
 
     let botResult = await dialogClient.detectIntent(botRequest)
-        .then((botResult) => {
+        .then(botResult => {
             console.log('botresult', botResult)
             const result = botResult[0].queryResult
             if (result.intent) {
