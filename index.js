@@ -58,13 +58,18 @@ app.post('/chatbot', async (request, response) => {
     // }
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
-            .then(console.log('botresult before',botResult))
-            .then(botResult => {
-                if (botResult.queryResult.allRequiredParamsPresent) {
-                    matchIntent(botResult)
-                }
-            })
-            .then(console.log('botresult after', botResult))
+        console.log('botresult before',botResult)
+            // .then(console.log('botresult before',botResult))
+        if (botResult.queryResult.allRequiredParamsPresent) {
+            matchIntent(botResult)
+        }    
+            // .then(botResult => {
+            //     if (botResult.queryResult.allRequiredParamsPresent) {
+            //         matchIntent(botResult)
+            //     }
+            // })
+        console.log('botresult after', botResult)
+            // .then(console.log('botresult after', botResult))
         response.send(botResult[0])
     } catch(error) {
         console.log(error)
