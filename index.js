@@ -48,8 +48,10 @@ app.post('/chatbot', async (request, response) => {
         session: sessionPath,
         queryInput: {
             input: {
-                text: request.body.body.message,
-                languageCode: "en-US"
+                text: {
+                    text: request.body.body.message,
+                    languageCode: "en-US"
+                }
             }
         },
         queryParams: {}
