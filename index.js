@@ -79,7 +79,6 @@ app.post('/chatbot', async (request, response) => {
 
         context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
-        console.log('con => param => fields',context.parameters.fields)
 
         response.send(botResult)
     } catch(error) {
