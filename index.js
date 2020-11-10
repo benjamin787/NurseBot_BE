@@ -60,8 +60,8 @@ app.post('/chatbot', async (request, response) => {
         let botResult = await dialogClient.detectIntent(botRequest)
         console.log('botresult before',botResult)
             // .then(console.log('botresult before',botResult))
-        if (botResult.queryResult.allRequiredParamsPresent) {
-            matchIntent(botResult)
+        if (botResult[0].queryResult.allRequiredParamsPresent) {
+            matchIntent(botResult[0])
         }    
             // .then(botResult => {
             //     if (botResult.queryResult.allRequiredParamsPresent) {
@@ -84,7 +84,7 @@ const findTest = location => {
             const siteCheck = result.select(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
-                botResult.queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
+                botResult[0].queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
             }
         })
 }
