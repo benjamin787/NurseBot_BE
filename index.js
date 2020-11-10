@@ -48,7 +48,7 @@ app.post('/chatbot', async (request, response) => {
         session: sessionPath,
         queryInput: {
             text: {
-                text: request.body.body,
+                text: request.body.body.message,
                 languageCode: "en-US"
             }
         },
@@ -60,7 +60,7 @@ app.post('/chatbot', async (request, response) => {
     console.log('context', context)
 
     if (context && context.length > 0) {
-        botRequest.queryParams = {contexts: [context]};
+        botRequest.queryParams = {contexts: context};
     }
     
     try {
@@ -82,7 +82,7 @@ app.post('/chatbot', async (request, response) => {
 
         response.send(botResult)
     } catch(error) {
-        console.log(error)
+        console.log('TRY CATCH error', error)
         response.send({message: 'blahblah'})
     }
 })
