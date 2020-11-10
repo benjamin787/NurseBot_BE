@@ -53,10 +53,12 @@ app.post('/chatbot', async (request, response) => {
             }
         }
     }
-    console.log('request. find context', request)
-    // if (contexts && contexts.length > 0) {
-    //     botRequest.queryParams = {contexts: request.body.contexts};
-    // }
+    console.log('context', request.context)
+    // console.log('request. find context', request)
+    if (contexts && contexts.length > 0) {
+        botRequest.queryParams = {contexts: request.contexts};
+    }
+    
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
         botResult = botResult[0]
