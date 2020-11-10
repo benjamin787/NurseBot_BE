@@ -46,8 +46,8 @@ app.post('/chatbot', async (request, response) => {
     console.log('req body', request.body)
     const botRequest = {
         session: sessionPath,
-        query_input: {
-            text: {
+        queryInput: {
+            input: {
                 text: request.body.body.message,
                 languageCode: "en-US"
             }
@@ -66,7 +66,6 @@ app.post('/chatbot', async (request, response) => {
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
         botResult = botResult[0]
-
 
         if (botResult.queryResult.allRequiredParamsPresent) {
             matchIntent(botResult)
