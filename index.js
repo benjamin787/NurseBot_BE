@@ -67,6 +67,8 @@ app.post('/chatbot', async (request, response) => {
             matchIntent(botResult[0])
         }    
         console.log('botresult after', botResult)
+        console.log('botresult parameters after',botResult[0].queryResult.parameters)
+        console.log('botresult intent after',botResult[0].queryResult.intent)
 
         response.send(botResult[0])
     } catch(error) {
@@ -87,18 +89,13 @@ const findTest = location => {
         }).catch(error => console.log('find test error', error))
 }
 
-// const intents = {
-//     "Find Test Location": findTest
-// }
-
 const matchIntent = botResult => {
     let middleIntent = botResult.queryResult.intent
     let middleParams = botResult.queryResult.parameters
     if (middleIntent.displayName == "Find Test Location") {
+        console.log('intent name match is hit')
         findTest(middleParams)
     }
-    // const { intent, parameters } = botResult.queryResult
-    // intents[intent.displayName](parameters)
 }
 
 const PORT = process.env.PORT || 5000
