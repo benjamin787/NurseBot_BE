@@ -55,6 +55,8 @@ app.post('/chatbot', async (request, response) => {
         queryParams: {}
     }
     console.log('req context', request.context)
+    console.log('req OUT context', request.outputContexts)
+    console.log('req IN  context', request.inputContexts)
     console.log('context', context)
 
     if (context && context.length > 0) {
@@ -64,19 +66,19 @@ app.post('/chatbot', async (request, response) => {
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
         botResult = botResult[0]
-        console.log('botresult parameters before match',botResult.queryResult.parameters)
-        console.log('botresult intent before match',botResult.queryResult.intent)
+
 
         if (botResult.queryResult.allRequiredParamsPresent) {
-            console.log('match intent is hit')
             matchIntent(botResult)
         }    
         console.log('botresult after match', botResult)
         console.log('botresult parameters after match',botResult.queryResult.parameters)
         console.log('botresult intent after match',botResult.queryResult.intent)
+        console.log('fulfill messages after match',botResult.queryResult.fulfillmentMessages)
 
-        context = botResult.queryResult.outputContexts
+        context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
+        console.log('con => param => fields',context.parameters.fields)
 
         response.send(botResult)
     } catch(error) {
