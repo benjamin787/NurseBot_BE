@@ -58,19 +58,19 @@ app.post('/chatbot', async (request, response) => {
     // }
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
-
+        botResult = botResult[0]
         console.log('botresult parameters before match',botResult[0].queryResult.parameters)
         console.log('botresult intent before match',botResult[0].queryResult.intent)
 
-        if (botResult[0].queryResult.allRequiredParamsPresent) {
+        if (botResult.queryResult.allRequiredParamsPresent) {
             console.log('match intent is hit')
             matchIntent(botResult[0])
         }    
         console.log('botresult after match', botResult)
-        console.log('botresult parameters after match',botResult[0].queryResult.parameters)
-        console.log('botresult intent after match',botResult[0].queryResult.intent)
+        console.log('botresult parameters after match',botResult.queryResult.parameters)
+        console.log('botresult intent after match',botResult.queryResult.intent)
 
-        response.send(botResult[0])
+        response.send(botResult)
     } catch(error) {
         console.log(error)
         response.send({message: 'blahblah'})
@@ -84,7 +84,7 @@ const findTest = location => {
             const siteCheck = result.select(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
-                botResult[0].queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
+                botResult.queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
             }
         }).catch(error => console.log('find test error', error))
 }
