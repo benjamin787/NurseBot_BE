@@ -27,8 +27,8 @@ const sessionId = uuid.v4();
 
 const options = {
     credentials: {
-        "private_key": JSON.parse(process.env.PRIVATE_KEY),
-        "client_email": process.env.CLIENT_EMAIL
+        private_key: JSON.parse(process.env.PRIVATE_KEY),
+        client_email: process.env.CLIENT_EMAIL
     }
 }
 
