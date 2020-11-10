@@ -58,6 +58,7 @@ app.post('/chatbot', async (request, response) => {
     // }
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
+        botResult = JSON.parse(botResult)
         console.log('botresult before',botResult)
         console.log('botresult parameters before',botResult[0].queryResult.parameters)
         console.log('botresult intent before',botResult[0].queryResult.intent)
