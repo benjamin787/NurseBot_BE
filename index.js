@@ -34,7 +34,7 @@ const options = {
 
 const projectId = process.env.PROJECT_ID
 
-
+let context;
 
 app.post('/chatbot', async (request, response) => {
     response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
@@ -51,12 +51,14 @@ app.post('/chatbot', async (request, response) => {
                 text: request.body.body,
                 languageCode: "en-US"
             }
-        }
+        },
+        queryParams: {}
     }
-    console.log('context', request.context)
-    // console.log('request. find context', request)
-    if (contexts && contexts.length > 0) {
-        botRequest.queryParams = {contexts: request.contexts};
+    console.log('req context', request.context)
+    console.log('context', context)
+
+    if (context && context.length > 0) {
+        botRequest.queryParams = {contexts: context};
     }
     
     try {
@@ -72,6 +74,9 @@ app.post('/chatbot', async (request, response) => {
         console.log('botresult after match', botResult)
         console.log('botresult parameters after match',botResult.queryResult.parameters)
         console.log('botresult intent after match',botResult.queryResult.intent)
+
+        context = botResult.queryResult.outputContexts
+        console.log('assigned context. check data structure', context)
 
         response.send(botResult)
     } catch(error) {
