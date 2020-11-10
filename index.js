@@ -86,7 +86,7 @@ const findTest = location => {
             if (siteCheck.physical_address) {
                 botResult[0].queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
             }
-        })
+        }).catch(error => console.log('find test error', error))
 }
 
 // const intents = {
@@ -97,7 +97,7 @@ const matchIntent = botResult => {
     let middleIntent = botResult.queryResult.intent
     let middleParams = botResult.queryResult.parameters
     if (middleIntent.displayName == "Find Test Location") {
-        findTest(middleparams)
+        findTest(middleParams)
     }
     // const { intent, parameters } = botResult.queryResult
     // intents[intent.displayName](parameters)
