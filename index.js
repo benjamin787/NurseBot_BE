@@ -47,14 +47,12 @@ app.post('/chatbot', async (request, response) => {
     const botRequest = {
         session: sessionPath,
         queryInput: {
-            input: {
-                text: {
-                    text: request.body.body.message,
-                    languageCode: "en-US"
-                }
+            text: {
+                languageCode: "en-US",
+                text: request.body.body.message
             }
         },
-        queryParams: {}
+        queryParams: {contexts: []}
     }
     console.log('req context', request.context)
     console.log('req OUT context', request.outputContexts)
