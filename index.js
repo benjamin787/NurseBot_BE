@@ -59,12 +59,12 @@ app.post('/chatbot', async (request, response) => {
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
         botResult = botResult[0]
-        console.log('botresult parameters before match',botResult[0].queryResult.parameters)
-        console.log('botresult intent before match',botResult[0].queryResult.intent)
+        console.log('botresult parameters before match',botResult.queryResult.parameters)
+        console.log('botresult intent before match',botResult.queryResult.intent)
 
         if (botResult.queryResult.allRequiredParamsPresent) {
             console.log('match intent is hit')
-            matchIntent(botResult[0])
+            matchIntent(botResult)
         }    
         console.log('botresult after match', botResult)
         console.log('botresult parameters after match',botResult.queryResult.parameters)
