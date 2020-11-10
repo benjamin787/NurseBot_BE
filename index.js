@@ -47,7 +47,7 @@ app.post('/chatbot', async (request, response) => {
     const botRequest = {
         session: sessionPath,
         queryInput: {
-            text: {
+            input: {
                 languageCode: "en-US",
                 text: request.body.body.message
             }
