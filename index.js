@@ -75,6 +75,8 @@ app.post('/chatbot', async (request, response) => {
         console.log('botresult parameters after match',botResult.queryResult.parameters)
         console.log('botresult intent after match',botResult.queryResult.intent)
 
+        botResult.queryResult.intent.resetContexts = true
+
         context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
         console.log('con => param => fields',context.parameters.fields)
