@@ -60,7 +60,7 @@ app.post('/chatbot', async (request, response) => {
     console.log('context', context)
 
     if (context && context.length > 0) {
-        botRequest.queryParams = {contexts: context};
+        botRequest.queryParams = {contexts: [context]};
     }
     
     try {
@@ -74,7 +74,6 @@ app.post('/chatbot', async (request, response) => {
         console.log('botresult after match', botResult)
         console.log('botresult parameters after match',botResult.queryResult.parameters)
         console.log('botresult intent after match',botResult.queryResult.intent)
-        console.log('fulfill messages after match',botResult.queryResult.fulfillmentMessages)
 
         context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
