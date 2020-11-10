@@ -53,7 +53,6 @@ app.post('/chatbot', async (request, response) => {
             }
         }
     }
-    console.log('out context', request.body.queryResult.outputContexts)
     // if (contexts && contexts.length > 0) {
     //     botRequest.queryParams = {contexts: contexts};
     // }
