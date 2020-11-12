@@ -42,7 +42,8 @@ app.post('/chatbot', async (request, response) => {
     
     const dialogClient = new dialogflow.SessionsClient(options);
     
-    const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, 'production', sessionId)
+    // const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, 'production', sessionId)
+    const sessionPath = `projects/${projectId}/agent/environments/production/sessions/${sessionId}`
 
     console.log('req body', request.body)
     console.log('sessionpath',sessionPath)
