@@ -50,14 +50,14 @@ app.post('/serve', async (request, response) => {
     console.log('request body', request.body)
     console.log('parsed req body', JSON.parse(request.body))
 
-    // const message = request.json()
+    const parsedRequest = JSON.parse(request.body.body)
     
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
                 languageCode: "en-US",
-                text: 'hi'
+                text: parsedRequest.message
             }
         }
     }
