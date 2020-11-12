@@ -92,10 +92,8 @@ app.post('/chatbot', async (request, response) => {
 
 const findTest = location => {
     axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
-        .then(response => console.log(response))
-        .then(result => {
-            console.log(result)
-            const siteCheck = result.select(site => site.physical_address[0].city == location.city)
+        .then(({ data }) => {
+            const siteCheck = data.select(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
                 hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
