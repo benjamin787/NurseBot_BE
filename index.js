@@ -106,6 +106,7 @@ const matchIntent = hookRequest => {
         console.log('you son of a bitch, im in')
     } else if (middleIntent.displayName == "Find Test Location") {
         console.log('intent name match is hit')
+        console.log('middleParams',middleParams)
         // findTest(middleParams)
     }
 }
