@@ -48,6 +48,9 @@ app.post('/serve', async (request, response) => {
         "Content-Type": "application/json"
     }
 
+    console.log('supposed text', request.body.body.message)
+    console.log('parsed supposed text', JSON.parse(request.body.body.message))
+    
     const botRequest = {
         session: sessionPath,
         queryInput: {
