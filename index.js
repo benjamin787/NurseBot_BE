@@ -75,9 +75,11 @@ app.post('/serve', async (request, response) => {
 
 app.post('/chatbot', async (request, response) => {
 
-    console.log('chatbot request queryResult', request.queryResult)
+    console.log('chatbot request body', request.body)
+    console.log('chatbot request session', request.session)
+    console.log('chatbot request headers', request.headers)
 
-    let hookRequest = JSON.parse(request)
+    let hookRequest = JSON.parse(request.body)
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
         matchIntent(hookRequest)
