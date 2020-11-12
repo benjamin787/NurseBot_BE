@@ -44,7 +44,7 @@ let context = [];
 
 app.post('/serve', async (request, response) => {
     response.headers = {
-        "Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app",
+        "Access-Control-Allow-Origin": "https://covid-nurse-bot.herokuapp.com",
         "Content-Type": "application/json"
     }
 
