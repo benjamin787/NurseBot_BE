@@ -43,26 +43,16 @@ app.post('/chatbot', async (request, response) => {
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
     console.log('req body', request.body)
-
-    const inputObject = dialogflow.QueryInput({
-        languageCode: "en-US",
-        text: request.body.body.message
-    })
     
-    // const botRequest = {
-    //     session: sessionPath,
-    //     queryInput: {
-    //         input: {
-    //             languageCode: "en-US",
-    //             text: request.body.body.message
-    //         }
-    //     },
-    //     queryParams: {contexts: []}
-    // }
-
     const botRequest = {
         session: sessionPath,
-        queryInput: inputObject
+        queryInput: {
+            text: {
+                languageCode: "en-US",
+                text: request.body.body.message
+            }
+        },
+        queryParams: {contexts: []}
     }
     
     console.log('req context', request.context)
@@ -75,7 +65,7 @@ app.post('/chatbot', async (request, response) => {
     }
     
     try {
-        let botResult = await dialogClient.detectIntent(botRequest)
+        let botResult = await dialogClient.detectIntent(JSON.stringify(botRequest))
         botResult = botResult[0]
 
         if (botResult.queryResult.allRequiredParamsPresent) {
