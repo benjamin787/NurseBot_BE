@@ -43,7 +43,7 @@ app.post('/chatbot', async (request, response) => {
     const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
 
     console.log('req body', request.body)
-    
+    console.log('sessionpath',sessionPath)
     const botRequest = {
         session: sessionPath,
         queryInput: {
@@ -63,6 +63,8 @@ app.post('/chatbot', async (request, response) => {
     if (context && context.length > 0) {
         botRequest.queryParams = {contexts: context};
     }
+
+    console.log('stringified', JSON.stringify(botRequest))
     
     try {
         let botResult = await dialogClient.detectIntent(JSON.stringify(botRequest))
