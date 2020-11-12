@@ -3,23 +3,15 @@ const dialogflow = require('@google-cloud/dialogflow');
 const express = require('express')
 const app = express()
 
-// const corsOptions = {
-//     origin: '*',
-//     methods: 'GET,HEAD,PUT,POST,PATCH,DELETE'
-// }
-
 const cors = require('cors')
-// app.use(cors(corsOptions))
 app.use(cors())
-
+app.options('/chatbot', cors())
 
 const morgan = require('morgan')
 app.use(morgan('dev'))
 
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
-
-app.options('/chatbot', cors())
 
 const axios = require('axios');
 const uuid = require('uuid');
@@ -38,7 +30,6 @@ const options = {
 
 const dialogClient = new dialogflow.SessionsClient(options);
 const sessionPath = `projects/${projectId}/locations/us/agent/environments/production/users/${userId}/sessions/${sessionId}`
-// const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, sessionId)
 
 let context = [];
 let hookResponse = {};
@@ -79,7 +70,11 @@ app.post('/chatbot', async (request, response) => {
     let hookRequest = request.body
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
-        matchIntent(hookRequest)
+        try {
+            await matchIntent(hookRequest)
+        } catch(error) {
+            console.log('ERROR',error)
+        }
     }    
 
     context = hookRequest.queryResult.outputContexts[0]
@@ -96,7 +91,7 @@ const findTest = location => {
             const siteCheck = data.find(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
-                hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
+                hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
             }
         }).catch(error => console.log('find test error', error))
 }
