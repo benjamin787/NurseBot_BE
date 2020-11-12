@@ -44,7 +44,7 @@ app.post('/chatbot', async (request, response) => {
 
     console.log('req body', request.body)
 
-    const inputObject = new dialogflow.QueryInput({
+    const inputObject = dialogClient.QueryInput({
         languageCode: "en-US",
         text: request.body.body.message
     })
