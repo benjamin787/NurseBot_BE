@@ -41,6 +41,7 @@ const sessionPath = `projects/${projectId}/locations/us/agent/environments/produ
 // const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, sessionId)
 
 let context = [];
+let hookResponse = {};
 
 app.post('/serve', async (request, response) => {
     response.headers = {
@@ -84,7 +85,8 @@ app.post('/chatbot', async (request, response) => {
     context = hookRequest.queryResult.outputContexts[0]
     console.log('assigned context. check data structure', context)
 
-    response.send({fulfillmentText: 'you are beautiful'})
+    response.send(hookResponse)
+    hookResponse = {}
 })
 
 const findTest = location => {
@@ -94,7 +96,7 @@ const findTest = location => {
             const siteCheck = result.select(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
-                botResult.queryResult.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
+                hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address.address_1}.`
             }
         }).catch(error => console.log('find test error', error))
 }
@@ -102,12 +104,14 @@ const findTest = location => {
 const matchIntent = hookRequest => {
     let middleIntent = hookRequest.queryResult.intent
     let middleParams = hookRequest.queryResult.parameters
+    console.log('middleParams',middleParams)
+    console.log('middleIntent',middleIntent)
+
     if (middleIntent.displayName == 'Find Tests') {
         console.log('you son of a bitch, im in')
     } else if (middleIntent.displayName == "Find Test Location") {
         console.log('intent name match is hit')
-        console.log('middleParams',middleParams)
-        // findTest(middleParams)
+        findTest(middleParams)
     }
 }
 
