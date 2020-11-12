@@ -44,7 +44,7 @@ app.post('/chatbot', async (request, response) => {
 
     console.log('req body', request.body)
 
-    const inputObject = dialogClient.QueryInput({
+    const inputObject = dialogflow.QueryInput({
         languageCode: "en-US",
         text: request.body.body.message
     })
@@ -84,8 +84,6 @@ app.post('/chatbot', async (request, response) => {
         console.log('botresult after match', botResult)
         console.log('botresult parameters after match',botResult.queryResult.parameters)
         console.log('botresult intent after match',botResult.queryResult.intent)
-
-        botResult.queryResult.intent.resetContexts = true
 
         context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
