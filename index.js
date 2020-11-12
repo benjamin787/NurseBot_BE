@@ -47,17 +47,15 @@ app.post('/serve', async (request, response) => {
         "Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app",
         "Content-Type": "application/json"
     }
-
-    console.log('req body', request.body)
-    console.log('supposed text', request.body.message)
-    console.log('parsed supposed text', JSON.parse(request.body.message))
+    const message = JSON.parse(request)
+    console.log('message body', message.body)
     
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
                 languageCode: "en-US",
-                text: request.body.body.message
+                text: message.body.message
             }
         }
     }
