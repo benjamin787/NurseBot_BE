@@ -78,18 +78,19 @@ app.post('/chatbot', async (request, response) => {
     }    
 
     context = hookRequest.queryResult.outputContexts[0]
-    console.log('assigned context. check data structure', context)
 
+    console.log('assigned context. check data structure', context)
+    console.log('hookResponse',hookResponse)
+    
     response.send(hookResponse)
     hookResponse = {}
-    console.log('hookResponse reset works?',hookResponse)
 })
 
 const findTest = location => {
     axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
         .then(({ data }) => {
             const siteCheck = data.find(site => site.physical_address[0].city == location.city)
-            console.log('siteCheck', siteCheck)
+
             if (siteCheck.physical_address) {
                 return `There's a test center at ${siteCheck.physical_address[0].address_1}.`
                 // hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
@@ -97,7 +98,7 @@ const findTest = location => {
         }).catch(error => console.log('find test error', error))
 }
 
-const matchIntent = hookRequest => {
+const matchIntent = async hookRequest => {
     let middleIntent = hookRequest.queryResult.intent
     let middleParams = hookRequest.queryResult.parameters
     console.log('middleParams',middleParams)
