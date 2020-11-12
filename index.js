@@ -24,6 +24,9 @@ const uuid = require('uuid');
 const axios = require('axios');
 const sessionId = uuid.v4();
 
+const projectId = process.env.PROJECT_ID
+
+
 const options = {
     credentials: {
         private_key: JSON.parse(process.env.PRIVATE_KEY),
@@ -31,16 +34,15 @@ const options = {
     }
 }
 
-const projectId = process.env.PROJECT_ID
 
 let context;
 
 app.post('/chatbot', async (request, response) => {
     response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
-
+    
     const dialogClient = new dialogflow.SessionsClient(options);
-
-    const sessionPath = dialogClient.projectAgentSessionPath(projectId, sessionId);
+    
+    const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, 'production', sessionId)
 
     console.log('req body', request.body)
     console.log('sessionpath',sessionPath)
@@ -65,7 +67,7 @@ app.post('/chatbot', async (request, response) => {
     }
 
     console.log('stringified', JSON.stringify(botRequest))
-    
+
     try {
         let botResult = await dialogClient.detectIntent(JSON.stringify(botRequest))
         botResult = botResult[0]
