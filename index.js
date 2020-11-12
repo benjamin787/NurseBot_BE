@@ -70,11 +70,7 @@ app.post('/chatbot', async (request, response) => {
     let hookRequest = request.body
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
-        try {
-            hookResponse = await matchIntent(hookRequest)
-        } catch(error) {
-            console.log('ERROR',error)
-        }
+        hookResponse = await matchIntent(hookRequest)
     }    
 
     context = hookRequest.queryResult.outputContexts[0]
