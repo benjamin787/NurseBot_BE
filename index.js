@@ -23,6 +23,7 @@ app.options('/chatbot', cors())
 const uuid = require('uuid');
 const axios = require('axios');
 const sessionId = uuid.v4();
+const userId = uuid.v4();
 
 const projectId = process.env.PROJECT_ID
 
@@ -43,7 +44,7 @@ app.post('/chatbot', async (request, response) => {
     const dialogClient = new dialogflow.SessionsClient(options);
     
     // const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, 'production', sessionId)
-    const sessionPath = `projects/${projectId}/agent/environments/production/users/-/sessions/${sessionId}`
+    const sessionPath = `projects/${projectId}/locations/*/agent/environments/production/users/${userId}/sessions/${sessionId}`
 
     console.log('req body', request.body)
     console.log('sessionpath',sessionPath)
