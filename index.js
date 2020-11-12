@@ -87,12 +87,14 @@ app.post('/chatbot', async (request, response) => {
 
     response.send(hookResponse)
     hookResponse = {}
+    console.log('hookResponse reset works?',hookResponse)
 })
 
 const findTest = location => {
-    axios.get(`https://covid-19-testing.github.io/locations/${location.state}/complete.json`)
+    axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
         .then(response => response.json())
         .then(result => {
+            console.log(result)
             const siteCheck = result.select(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
