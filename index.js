@@ -73,13 +73,15 @@ app.post('/serve', async (request, response) => {
 
 app.post('/chatbot', async (request, response) => {
 
-    console.log('chatbot request', request)
+    console.log('chatbot request queryResult', request.queryResult)
 
-    if (request.queryResult.allRequiredParamsPresent) {
-        matchIntent(request)
+    let hookRequest = JSON.parse(request)
+
+    if (hookRequest.queryResult.allRequiredParamsPresent) {
+        matchIntent(hookRequest)
     }    
 
-    context = botResult.queryResult.outputContexts[0]
+    context = hookRequest.queryResult.outputContexts[0]
     console.log('assigned context. check data structure', context)
 
     response.send({fulfillmentText: 'you are beautiful'})
