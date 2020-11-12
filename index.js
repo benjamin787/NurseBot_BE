@@ -48,8 +48,9 @@ app.post('/serve', async (request, response) => {
         "Content-Type": "application/json"
     }
 
-    console.log('supposed text', request.body.body.message)
-    console.log('parsed supposed text', JSON.parse(request.body.body.message))
+    console.log('req body', request.body)
+    console.log('supposed text', request.body.message)
+    console.log('parsed supposed text', JSON.parse(request.body.message))
     
     const botRequest = {
         session: sessionPath,
