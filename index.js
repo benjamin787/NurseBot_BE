@@ -78,7 +78,7 @@ app.post('/chatbot', async (request, response) => {
         context = botResult.queryResult.outputContexts[0]
         console.log('assigned context. check data structure', context)
 
-        response.send(botResult)
+        response.json(botResult)
     } catch(error) {
         console.log('TRY CATCH error', error)
         response.send({message: 'blahblah'})
