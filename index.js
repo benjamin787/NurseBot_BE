@@ -83,7 +83,8 @@ app.post('/chatbot', async (request, response) => {
 })
 
 const findTest = location => {
-    axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
+    return (
+        axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
         .then(({ data }) => {
             const siteCheck = data.find(site => site.physical_address[0].city == location.city)
 
@@ -92,6 +93,7 @@ const findTest = location => {
                 // hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
             }
         }).catch(error => console.log('find test error', error))
+    )
 }
 
 const matchIntent = async hookRequest => {
