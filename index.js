@@ -71,7 +71,7 @@ app.post('/chatbot', async (request, response) => {
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
         try {
-            await matchIntent(hookRequest)
+            hookResponse = await matchIntent(hookRequest)
         } catch(error) {
             console.log('ERROR',error)
         }
@@ -91,7 +91,8 @@ const findTest = location => {
             const siteCheck = data.find(site => site.physical_address[0].city == location.city)
             console.log('siteCheck', siteCheck)
             if (siteCheck.physical_address) {
-                hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
+                return `There's a test center at ${siteCheck.physical_address[0].address_1}.`
+                // hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
             }
         }).catch(error => console.log('find test error', error))
 }
@@ -106,7 +107,7 @@ const matchIntent = hookRequest => {
         console.log('you son of a bitch, im in')
     } else if (middleIntent.displayName == "Find Test Location") {
         console.log('intent name match is hit')
-        findTest(middleParams)
+        return findTest(middleParams)
     }
 }
 
