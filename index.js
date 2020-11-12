@@ -47,8 +47,6 @@ app.post('/serve', async (request, response) => {
         "Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app",
         "Content-Type": "application/json"
     }
-    console.log('request body', request.body)
-    console.log('parsed req body', JSON.parse(request.body))
 
     const parsedRequest = JSON.parse(request.body.body)
     
