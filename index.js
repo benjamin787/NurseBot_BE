@@ -37,7 +37,7 @@ const options = {
 }
 
 const dialogClient = new dialogflow.SessionsClient(options);
-const sessionPath = `projects/${projectId}/locations/*/agent/environments/production/users/${userId}/sessions/${sessionId}`
+const sessionPath = `projects/${projectId}/locations/us/agent/environments/production/users/${userId}/sessions/${sessionId}`
 // const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, sessionId)
 
 let context = [];
