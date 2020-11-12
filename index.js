@@ -3,13 +3,14 @@ const dialogflow = require('@google-cloud/dialogflow');
 const express = require('express')
 const app = express()
 
-const corsOptions = {
-    origin: '*',
-    methods: 'GET,HEAD,PUT,POST,PATCH,DELETE'
-}
+// const corsOptions = {
+//     origin: '*',
+//     methods: 'GET,HEAD,PUT,POST,PATCH,DELETE'
+// }
 
 const cors = require('cors')
-app.use(cors(corsOptions))
+// app.use(cors(corsOptions))
+app.use(cors())
 
 
 const morgan = require('morgan')
@@ -20,13 +21,13 @@ app.use(bodyParser.json())
 
 app.options('/chatbot', cors())
 
-const uuid = require('uuid');
 const axios = require('axios');
+const uuid = require('uuid');
+
 const sessionId = uuid.v4();
 const userId = uuid.v4();
 
 const projectId = process.env.PROJECT_ID
-
 
 const options = {
     credentials: {
@@ -35,19 +36,18 @@ const options = {
     }
 }
 
+const dialogClient = new dialogflow.SessionsClient(options);
+// const sessionPath = `projects/${projectId}/locations/*/agent/environments/production/users/${userId}/sessions/${sessionId}`
+const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, sessionId)
 
-let context;
+let context = [];
 
-app.post('/chatbot', async (request, response) => {
-    response.headers = {"Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app"}
-    
-    const dialogClient = new dialogflow.SessionsClient(options);
-    
-    // const sessionPath = dialogClient.projectAgentEnvironmentUserSessionPath(projectId, 'production', sessionId)
-    const sessionPath = `projects/${projectId}/locations/*/agent/environments/production/users/${userId}/sessions/${sessionId}`
+app.post('/serve', async (request, response) => {
+    response.headers = {
+        "Access-Control-Allow-Origin": "https://covid-nurse-bot.web.app",
+        "Content-Type": "application/json"
+    }
 
-    console.log('req body', request.body)
-    console.log('sessionpath',sessionPath)
     const botRequest = {
         session: sessionPath,
         queryInput: {
@@ -55,40 +55,34 @@ app.post('/chatbot', async (request, response) => {
                 languageCode: "en-US",
                 text: request.body.body.message
             }
-        },
-        queryParams: {contexts: []}
+        }
     }
-    
-    console.log('req context', request.context)
-    console.log('req OUT context', request.outputContexts)
-    console.log('req IN  context', request.inputContexts)
-    console.log('context', context)
 
     if (context && context.length > 0) {
         botRequest.queryParams = {contexts: context};
     }
 
-    console.log('stringified', JSON.stringify(botRequest))
-
     try {
-        let botResult = await dialogClient.detectIntent(JSON.stringify(botRequest))
-        botResult = botResult[0]
-
-        if (botResult.queryResult.allRequiredParamsPresent) {
-            matchIntent(botResult)
-        }    
-        console.log('botresult after match', botResult)
-        console.log('botresult parameters after match',botResult.queryResult.parameters)
-        console.log('botresult intent after match',botResult.queryResult.intent)
-
-        context = botResult.queryResult.outputContexts[0]
-        console.log('assigned context. check data structure', context)
-
-        response.json(botResult)
+        let botResult = await dialogClient.detectIntent(botRequest)
+        response.json(botResult[0])
     } catch(error) {
         console.log('TRY CATCH error', error)
-        response.send({message: 'blahblah'})
+        response.json({message: 'blahblah', error: error})
     }
+})
+
+app.post('/chatbot', async (request, response) => {
+
+    console.log('chatbot request', request)
+
+    if (request.queryResult.allRequiredParamsPresent) {
+        matchIntent(request)
+    }    
+
+    context = botResult.queryResult.outputContexts[0]
+    console.log('assigned context. check data structure', context)
+
+    response.send({fulfillmentText: 'you are beautiful'})
 })
 
 const findTest = location => {
@@ -103,12 +97,14 @@ const findTest = location => {
         }).catch(error => console.log('find test error', error))
 }
 
-const matchIntent = botResult => {
-    let middleIntent = botResult.queryResult.intent
-    let middleParams = botResult.queryResult.parameters
-    if (middleIntent.displayName == "Find Test Location") {
+const matchIntent = hookRequest => {
+    let middleIntent = hookRequest.queryResult.intent
+    let middleParams = hookRequest.queryResult.parameters
+    if (middleIntent.displayName == 'Find Tests') {
+        console.log('you son of a bitch, im in')
+    } else if (middleIntent.displayName == "Find Test Location") {
         console.log('intent name match is hit')
-        findTest(middleParams)
+        // findTest(middleParams)
     }
 }
 
