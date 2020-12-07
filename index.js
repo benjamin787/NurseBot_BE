@@ -71,7 +71,10 @@ app.post('/chatbot', async (request, response) => {
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
         hookResponse = await matchIntent(hookRequest)
-    }    
+    }
+    hookResponse = hookRequest.queryResult.allRequiredParamsPresent
+        ? await matchIntent(hookRequest)
+        : setTimeout(() => {queryResult: 'yikes'}, 500)
 
     context = hookRequest.queryResult.outputContexts[0]
 
@@ -82,33 +85,44 @@ app.post('/chatbot', async (request, response) => {
     hookResponse = {}
 })
 
+const matchIntent = async hookRequest => {
+    let middleRequest = hookRequest.queryResult
+
+    console.log('middleRequest',middleRequest)
+
+    //switch statement connecting options
+    switch (middleRequest.intent.displayName) {
+        case 'Find Test Location':
+            return findTest(middleRequest.parameters);
+            break;
+        default:
+            return 'Darn it. Default again.'
+            break;
+    }
+
+}
+
+        // if (middleIntent.displayName == 'Find Tests') {
+        //     console.log('you son of a bitch, im in')
+        // } else if (middleIntent.displayName == "Find Test Location") {
+        //     console.log('intent name match is hit')
+        //     return findTest(middleParams)
+        // }
+
 const findTest = location => {
     return (
         axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
-        .then(({ data }) => {
-            const siteCheck = data.find(site => site.physical_address[0].city == location.city)
+            .then(({ data }) => {
+                let siteCheck = data.find(site => site.physical_address[0].city == location.city)
 
-            if (siteCheck.physical_address) {
-                return `There's a test center at ${siteCheck.physical_address[0].address_1}.`
-                // hookResponse.fulfillmentText = `There's a test center at ${siteCheck.physical_address[0].address_1}.`
-            }
-        }).catch(error => console.log('find test error', error))
+                return (siteCheck.physical_address
+                    ? `There's a test center at ${siteCheck.physical_address[0].address_1}.`
+                    : 'No address given.'
+                )
+            }).catch(error => console.log('find test error', error))
     )
 }
 
-const matchIntent = async hookRequest => {
-    let middleIntent = hookRequest.queryResult.intent
-    let middleParams = hookRequest.queryResult.parameters
-    console.log('middleParams',middleParams)
-    console.log('middleIntent',middleIntent)
-
-    if (middleIntent.displayName == 'Find Tests') {
-        console.log('you son of a bitch, im in')
-    } else if (middleIntent.displayName == "Find Test Location") {
-        console.log('intent name match is hit')
-        return findTest(middleParams)
-    }
-}
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, '0.0.0.0')
