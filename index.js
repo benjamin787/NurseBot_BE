@@ -58,7 +58,7 @@ app.post('/serve', async (request, response) => {
 
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
-        console.log('botresult',botResult)
+        console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
         response.json(botResult[0])
     } catch(error) {
         console.log('TRY CATCH error', error)
@@ -90,26 +90,25 @@ const matchIntent = async hookRequest => {
     let middleRequest = hookRequest.queryResult
 
     //switch statement connecting options
+    let middleResponse;
     switch (middleRequest.intent.displayName) {
         case 'Find Test Location':
-            return findTest(middleRequest.parameters);
+            middleResponse = findTest(middleRequest.parameters);
             break;
         default:
-            return {
-                queryResult: {
-                    fulfillmentText: 'Darn it. Default again.'
-                }
-            }
+            middleResponse = 'Darn it. Default again.'
             break;
     }
+    return {queryResult: {fulfillmentText: middleResponse}}
 
 }
 
 const findTest = location => {
+    console.log('location',location)
     return (
         axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
             .then(({ data }) => {
-                console.log('LOCATION DATA', data)
+                console.log('LOCATION DATA', data[0])
                 let siteCheck = data.find(site => site.physical_address[0].city == location.city)
 
                 return (siteCheck.physical_address
