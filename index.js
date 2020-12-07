@@ -58,6 +58,7 @@ app.post('/serve', async (request, response) => {
 
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
+        console.log(botResult)
         response.json(botResult[0])
     } catch(error) {
         console.log('TRY CATCH error', error)
