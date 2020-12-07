@@ -106,6 +106,7 @@ const matchIntent = async hookRequest => {
 }
 
 const findTest = location => {
+    console.log('findTest arg', location)
     return (
         axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
             .then(({ data }) => {
