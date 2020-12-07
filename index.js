@@ -58,7 +58,7 @@ app.post('/serve', async (request, response) => {
 
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
-        console.log(botResult)
+        console.log('botresult',botResult)
         response.json(botResult[0])
     } catch(error) {
         console.log('TRY CATCH error', error)
@@ -89,26 +89,21 @@ app.post('/chatbot', async (request, response) => {
 const matchIntent = async hookRequest => {
     let middleRequest = hookRequest.queryResult
 
-    console.log('middleRequest',middleRequest)
-
     //switch statement connecting options
     switch (middleRequest.intent.displayName) {
         case 'Find Test Location':
             return findTest(middleRequest.parameters);
             break;
         default:
-            return 'Darn it. Default again.'
+            return {
+                queryResult: {
+                    fulfillmentText: 'Darn it. Default again.'
+                }
+            }
             break;
     }
 
 }
-
-        // if (middleIntent.displayName == 'Find Tests') {
-        //     console.log('you son of a bitch, im in')
-        // } else if (middleIntent.displayName == "Find Test Location") {
-        //     console.log('intent name match is hit')
-        //     return findTest(middleParams)
-        // }
 
 const findTest = location => {
     return (
