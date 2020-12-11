@@ -70,12 +70,12 @@ app.post('/chatbot', async (request, response) => {
 
     let hookRequest = request.body
 
-    if (hookRequest.queryResult.allRequiredParamsPresent) {
-        hookResponse = await matchIntent(hookRequest)
-    }
-    hookResponse = hookRequest.queryResult.allRequiredParamsPresent
+    try { hookResponse = hookRequest.queryResult.allRequiredParamsPresent
         ? await matchIntent(hookRequest)
         : setTimeout(() => {queryResult: 'yikes'}, 500)
+    } catch(error) {
+        console.log(error)
+    }
 
     context = hookRequest.queryResult.outputContexts[0]
 
@@ -89,8 +89,7 @@ app.post('/chatbot', async (request, response) => {
 const matchIntent = async hookRequest => {
     let middleRequest = hookRequest.queryResult
 
-    //switch statement connecting options
-    let middleResponse;
+    let middleResponse = '';
     switch (middleRequest.intent.displayName) {
         case 'Find Test Location':
             middleResponse = findTest(middleRequest.parameters);
@@ -108,12 +107,11 @@ const findTest = location => {
     return (
         axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
             .then(({ data }) => {
-                console.log('LOCATION DATA', data[0])
                 let siteCheck = data.find(site => site.physical_address[0].city == location.city)
 
                 return (siteCheck.physical_address
                     ? `There's a test center at ${siteCheck.physical_address[0].address_1}.`
-                    : 'No address given.'
+                    : `No address given for the site at ${siteCheck.name}.`
                 )
             }).catch(error => console.log('find test error', error))
     )
