@@ -75,7 +75,7 @@ app.post('/chatbot', async (request, response) => {
         : setTimeout(() => {queryResult: 'yikes'}, 500)
 
         context = hookRequest.queryResult.outputContexts[0]
-        
+
         console.log('assigned context. check data structure', context)
         console.log('hookResponse',hookResponse)
         
@@ -84,8 +84,6 @@ app.post('/chatbot', async (request, response) => {
     } catch(error) {
         console.log(error)
     }
-
-
     
 })
 
