@@ -73,17 +73,20 @@ app.post('/chatbot', async (request, response) => {
     try { hookResponse = hookRequest.queryResult.allRequiredParamsPresent
         ? await matchIntent(hookRequest)
         : setTimeout(() => {queryResult: 'yikes'}, 500)
+
+        context = hookRequest.queryResult.outputContexts[0]
+        
+        console.log('assigned context. check data structure', context)
+        console.log('hookResponse',hookResponse)
+        
+        response.send(hookResponse)
+        hookResponse = {}
     } catch(error) {
         console.log(error)
     }
 
-    context = hookRequest.queryResult.outputContexts[0]
 
-    console.log('assigned context. check data structure', context)
-    console.log('hookResponse',hookResponse)
     
-    response.send(hookResponse)
-    hookResponse = {}
 })
 
 const matchIntent = async hookRequest => {
