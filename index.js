@@ -20,9 +20,6 @@ app.use(bodyParser.json())
 const axios = require('axios');
 const uuid = require('uuid');
 
-const PORT = process.env.PORT || 5000
-app.listen(PORT, '0.0.0.0')
-
 const sessionId = uuid.v4();
 const userId = uuid.v4();
 
@@ -79,7 +76,7 @@ app.post('/serve', asyncHandler(async (request, response) => {
 
     botResult[0]
         ? respond.json(botResult[0])
-        : () => { throw createError(500,
+        : () => { throw createError(400,
             "I didn't catch that. Could you say it differently?"
             )}
 
@@ -102,7 +99,7 @@ app.post('/chatbot', asyncHandler(async (request, response) => {
         hookResponse = {}
 
     } else {
-        throw createError(500, 'Try try again')
+        throw createError(404, 'Try try again')
     }
 
     // try { hookResponse = hookRequest.queryResult.allRequiredParamsPresent
@@ -161,3 +158,6 @@ app.use((error, request, response, next) => {
         stack: error.stack
     })
 })
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, '0.0.0.0')
