@@ -44,7 +44,7 @@ app.post('/serve', asyncHandler(async (request, response) => {
         "Content-Type": "application/json"
     }
 
-    const { message } = request.body
+    const { message } = request.body.body
 
     // const parsedRequest = JSON.parse(request.body.body)
     
@@ -89,7 +89,7 @@ app.post('/chatbot', asyncHandler(async (request, response) => {
     let hookRequest = request.body
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
-        let hookResponse = await matchIntent(hookRequest)
+        hookResponse = await matchIntent(hookRequest)
         context = hookRequest.queryResult.outputContexts[0]
     
         console.log('assigned context. check data structure', context)
