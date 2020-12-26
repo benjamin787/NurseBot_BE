@@ -77,7 +77,13 @@ app.post('/serve', asyncHandler(async (request, response) => {
     let botResult = await dialogClient.detectIntent(botRequest)
     console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
 
-    if (!botResult[0]) throw createError(500, "I didn't catch that. Could you say it differently?")
+    botResult[0]
+        ? respond.json(botResult[0])
+        : () => { throw createError(500,
+            "I didn't catch that. Could you say it differently?"
+            )}
+
+    // if (!botResult[0]) throw createError(500, "I didn't catch that. Could you say it differently?")
     
 }))
 
