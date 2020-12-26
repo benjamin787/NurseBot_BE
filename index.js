@@ -5,7 +5,11 @@ const app = express()
 
 const cors = require('cors')
 app.use(cors())
-app.options('/chatbot', cors())
+// app.options('/chatbot', cors())
+
+const asyncHandler = require('express-async-handler')
+
+const createError = require('http-errors')
 
 const morgan = require('morgan')
 app.use(morgan('dev'))
@@ -15,6 +19,9 @@ app.use(bodyParser.json())
 
 const axios = require('axios');
 const uuid = require('uuid');
+
+const PORT = process.env.PORT || 5000
+app.listen(PORT, '0.0.0.0')
 
 const sessionId = uuid.v4();
 const userId = uuid.v4();
@@ -34,20 +41,22 @@ const sessionPath = `projects/${projectId}/locations/us/agent/environments/produ
 let context = [];
 let hookResponse = {};
 
-app.post('/serve', async (request, response) => {
+app.post('/serve', asyncHandler(async (request, response) => {
     response.headers = {
         "Access-Control-Allow-Origin": "https://covid-nurse-bot.herokuapp.com",
         "Content-Type": "application/json"
     }
 
-    const parsedRequest = JSON.parse(request.body.body)
+    const { message } = request.body
+
+    // const parsedRequest = JSON.parse(request.body.body)
     
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
                 languageCode: "en-US",
-                text: parsedRequest.message
+                text: message
             }
         }
     }
@@ -56,17 +65,23 @@ app.post('/serve', async (request, response) => {
         botRequest.queryParams = {contexts: context};
     }
 
-    try {
-        let botResult = await dialogClient.detectIntent(botRequest)
-        console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
-        response.json(botResult[0])
-    } catch(error) {
-        console.log('TRY CATCH error', error)
-        response.json({message: 'blahblah', error: error})
-    }
-})
+    // try {
+    //     let botResult = await dialogClient.detectIntent(botRequest)
+    //     console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
+    //     response.json(botResult[0])
+    // } catch(error) {
+    //     console.log('TRY CATCH error', error)
+    //     response.json({message: 'blahblah', error: error})
+    // }
+    
+    let botResult = await dialogClient.detectIntent(botRequest)
+    console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
 
-app.post('/chatbot', async (request, response) => {
+    if (!botResult[0]) throw createError(500, "I didn't catch that. Could you say it differently?")
+    
+}))
+
+app.post('/chatbot', asyncHandler(async (request, response) => {
 
     let hookRequest = request.body
 
@@ -85,7 +100,7 @@ app.post('/chatbot', async (request, response) => {
         console.log(error)
     }
     
-})
+}))
 
 const matchIntent = async hookRequest => {
     let middleRequest = hookRequest.queryResult
@@ -118,6 +133,11 @@ const findTest = location => {
     )
 }
 
-
-const PORT = process.env.PORT || 5000
-app.listen(PORT, '0.0.0.0')
+app.use((error, request, response, next) => {
+    response.status(error.status)
+    response.json({
+        status: error.status,
+        message: error.message,
+        stack: error.stack
+    })
+})
