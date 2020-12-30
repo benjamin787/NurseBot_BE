@@ -44,20 +44,16 @@ app.post('/serve', asyncHandler(async (request, response) => {
         "Content-Type": "application/json"
     }
 
-    // const { message } = request.body.body
+    const { message } = request.body.body
 
-    // console.log('message', message)
-    console.log('request.body', request.body)
-    console.log('request.body.body', request.body.body)
-
-    // const parsedRequest = JSON.parse(request.body.body)
+    console.log('message', message)
     
     const botRequest = {
         session: sessionPath,
         queryInput: {
             text: {
                 languageCode: "en-US",
-                text: request.body
+                text: message
             }
         }
     }
@@ -79,7 +75,7 @@ app.post('/serve', asyncHandler(async (request, response) => {
     console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
 
     botResult[0]
-        ? respond.json(botResult[0])
+        ? response.json(botResult[0])
         : () => { throw createError(400,
             "I didn't catch that. Could you say it differently?"
             )}
