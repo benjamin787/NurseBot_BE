@@ -46,6 +46,8 @@ app.post('/serve', asyncHandler(async (request, response) => {
 
     const { message } = request.body.body
 
+    console.log('message', message)
+
     // const parsedRequest = JSON.parse(request.body.body)
     
     const botRequest = {
@@ -86,7 +88,7 @@ app.post('/serve', asyncHandler(async (request, response) => {
 
 app.post('/chatbot', asyncHandler(async (request, response) => {
 
-    let hookRequest = request.body
+    let hookRequest = request.body.body
 
     if (hookRequest.queryResult.allRequiredParamsPresent) {
         hookResponse = await matchIntent(hookRequest)
