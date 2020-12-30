@@ -5,7 +5,7 @@ const app = express()
 
 const cors = require('cors')
 app.use(cors())
-// app.options('/chatbot', cors())
+app.options('/chatbot', cors())
 
 const asyncHandler = require('express-async-handler')
 
@@ -44,9 +44,11 @@ app.post('/serve', asyncHandler(async (request, response) => {
         "Content-Type": "application/json"
     }
 
-    const { message } = request.body.body
+    // const { message } = request.body.body
 
-    console.log('message', message)
+    // console.log('message', message)
+    console.log('request.body', request.body)
+    console.log('request.body.body', request.body.body)
 
     // const parsedRequest = JSON.parse(request.body.body)
     
@@ -55,7 +57,7 @@ app.post('/serve', asyncHandler(async (request, response) => {
         queryInput: {
             text: {
                 languageCode: "en-US",
-                text: message
+                text: request.body
             }
         }
     }
