@@ -62,32 +62,22 @@ app.post('/serve', asyncHandler(async (request, response) => {
         botRequest.queryParams = {contexts: context};
     }
 
-    // try {
-    //     let botResult = await dialogClient.detectIntent(botRequest)
-    //     console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
-    //     response.json(botResult[0])
-    // } catch(error) {
-    //     console.log('TRY CATCH error', error)
-    //     response.json({message: 'blahblah', error: error})
-    // }
-    
-    let botResult = await dialogClient.detectIntent(botRequest)
-    console.log('botresult fulfillment messages',botResult[0].queryResult.fulfillmentMessages)
+    try {
+        let botResult = await dialogClient.detectIntent(botRequest)
 
-    botResult[0]
-        ? response.json(botResult[0])
-        : () => { throw createError(400,
-            "I didn't catch that. Could you say it differently?"
-            )}
+        response.json(botResult[0])
+    } catch(e) {
+        response.json({message: "I didn't catch that. Could you say it differently?", error: e})
+    }
 
-    // if (!botResult[0]) throw createError(500, "I didn't catch that. Could you say it differently?")
-    
 }))
 
 app.post('/chatbot', asyncHandler(async (request, response) => {
 
     let hookRequest = request.body.body
 
+    const fallback = createError(404, 'Try try again')
+    
     if (hookRequest.queryResult.allRequiredParamsPresent) {
         hookResponse = await matchIntent(hookRequest)
         context = hookRequest.queryResult.outputContexts[0]
@@ -99,23 +89,8 @@ app.post('/chatbot', asyncHandler(async (request, response) => {
         hookResponse = {}
 
     } else {
-        throw createError(404, 'Try try again')
+        throw fallback
     }
-
-    // try { hookResponse = hookRequest.queryResult.allRequiredParamsPresent
-    //     ? await matchIntent(hookRequest)
-    //     : setTimeout(() => {queryResult: 'yikes'}, 500)
-
-    //     context = hookRequest.queryResult.outputContexts[0]
-
-    //     console.log('assigned context. check data structure', context)
-    //     console.log('hookResponse',hookResponse)
-        
-    //     response.send(hookResponse)
-    //     hookResponse = {}
-    // } catch(error) {
-    //     console.log(error)
-    // }
     
 }))
 
@@ -149,15 +124,6 @@ const findTest = location => {
             }).catch(error => console.log('find test error', error))
     )
 }
-
-app.use((error, request, response, next) => {
-    response.status(error.status)
-    response.json({
-        status: error.status,
-        message: error.message,
-        stack: error.stack
-    })
-})
 
 const PORT = process.env.PORT || 5000
 app.listen(PORT, '0.0.0.0')
