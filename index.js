@@ -9,8 +9,6 @@ app.options('/chatbot', cors())
 
 const asyncHandler = require('express-async-handler')
 
-const createError = require('http-errors')
-
 const morgan = require('morgan')
 app.use(morgan('dev'))
 
@@ -45,8 +43,6 @@ app.post('/serve', asyncHandler(async (request, response) => {
     }
 
     const { message } = request.body.body
-
-    console.log('message', message)
     
     const botRequest = {
         session: sessionPath,
@@ -64,40 +60,38 @@ app.post('/serve', asyncHandler(async (request, response) => {
 
     try {
         let botResult = await dialogClient.detectIntent(botRequest)
-
         response.json(botResult[0])
     } catch(e) {
-        response.json({message: "I didn't catch that. Could you say it differently?", error: e})
+        response.json({
+            message: "I didn't catch that. Could you say it differently?",
+            error: e
+        })
     }
-
 }))
 
 app.post('/chatbot', asyncHandler(async (request, response) => {
 
     let hookRequest = request.body.body
-
-    const fallback = createError(404, 'Try try again')
     
-    if (hookRequest.queryResult.allRequiredParamsPresent) {
+    try {
         hookResponse = await matchIntent(hookRequest)
+        
         context = hookRequest.queryResult.outputContexts[0]
-    
-        console.log('assigned context. check data structure', context)
-        console.log('hookResponse',hookResponse)
-
-        response.send(hookResponse)
+        
+        response.json(hookResponse)
         hookResponse = {}
-
-    } else {
-        throw fallback
+    } catch(e) {
+        response.json({
+            message: "I didn't catch that. Could you say it differently?",
+            error: e
+        })
     }
-    
 }))
 
 const matchIntent = async hookRequest => {
     let middleRequest = hookRequest.queryResult
+    let middleResponse = ''
 
-    let middleResponse = '';
     switch (middleRequest.intent.displayName) {
         case 'Find Test Location':
             middleResponse = findTest(middleRequest.parameters);
@@ -107,22 +101,18 @@ const matchIntent = async hookRequest => {
             break;
     }
     return {queryResult: {fulfillmentText: middleResponse}}
-
 }
 
 const findTest = location => {
-    console.log('location',location)
-    return (
-        axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
-            .then(({ data }) => {
-                let siteCheck = data.find(site => site.physical_address[0].city == location.city)
+    axios.get(`https://covid-19-testing.github.io/locations/${location.state.toLowerCase()}/complete.json`)
+        .then(({ data }) => {
+            let siteCheck = data.find(site => site.physical_address[0].city == location.city)
 
-                return (siteCheck.physical_address
-                    ? `There's a test center at ${siteCheck.physical_address[0].address_1}.`
-                    : `No address given for the site at ${siteCheck.name}.`
-                )
-            }).catch(error => console.log('find test error', error))
-    )
+            return (siteCheck.physical_address
+                ? `There's a test center at ${siteCheck.physical_address[0].address_1}.`
+                : `No address given for the site at ${siteCheck.name}.`
+            )
+        }).catch(e => console.log(e))
 }
 
 const PORT = process.env.PORT || 5000
